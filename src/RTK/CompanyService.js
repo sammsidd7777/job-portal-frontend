@@ -4,7 +4,7 @@ export const CompanyService = createApi({
   reducerPath: "CompanyService",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/", // ✅ backend base URL
+    baseUrl: "https://job-hunt-backend-sigma.vercel.app/", // ✅ backend base URL
     credentials: "include", // ✅ allows cookies (JWT sessions)
   }),
 

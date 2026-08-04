@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const savedJobsApi = createApi({
   reducerPath: "savedJobsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/jobs",
+    baseUrl: "https://job-hunt-backend-sigma.vercel.app/jobs",
     credentials: "include",
   }),
   tagTypes: ["SavedJobs"],

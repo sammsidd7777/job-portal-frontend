@@ -4,7 +4,7 @@ export const GlobalUploadService = createApi({
   reducerPath: "GlobalUploadService",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/",
+    baseUrl: "https://job-hunt-backend-sigma.vercel.app/",
     credentials: "include",
   }),
 

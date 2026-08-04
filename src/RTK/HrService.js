@@ -4,7 +4,7 @@ export const HrService = createApi({
   reducerPath: "HrService",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/", // ✅ keep api root clean
+    baseUrl: "https://job-hunt-backend-sigma.vercel.app/", // ✅ keep api root clean
     credentials: "include",
   }),
 
