@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const AuthService = createApi({
   reducerPath: "AuthService",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/", // ✅ backend base URL
+    baseUrl: "https://job-hunt-backend-sigma.vercel.app/", // ✅ backend base URL
     credentials: "include", // ✅ send and receive cookies
 
   }),
