@@ -1,139 +1,72 @@
-import { createBrowserRouter, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import Loader from "../helper/Loader ";
 
-// Candidate Layout
-import CandidateLayout from "../layouts/CandidateLayout";
+const CandidateLayout = lazy(() => import("../layouts/CandidateLayout"));
+const PublicLayout = lazy(() => import("../layouts/PublicLayout"));
+const HRLayout = lazy(() => import("../layouts/HRLayout"));
 
-// Candidate Pages
-import Dashboard from "../pages/candidate/Dashboard";
-import Applications from "../pages/candidate/Applications";
-import SavedJobs from "../pages/candidate/SavedJobs ";
-import Notification from "../pages/candidate/Notification";
-import Profile from "../pages/candidate/Profile";
-import Home from "../pages/public/Home";
-import PublicLayout from "../layouts/PublicLayout";
-import BrowseCompanies from "../pages/public/BrowseCompanies";
-import NotificationToasty from "../components/common/NotificationToasty";
-import HRLayout from "../layouts/HRLayout";
-import HRDashboard from "../components/hr/dashboard/HRDashboard";
-import CreateJob from "../components/hr/jobs/CreateJob";
-import CompanyProfile from "../components/hr/company/CompanyProfile";
-import ApplicantDetails from "../components/hr/applicants/ApplicantDetails";
-import Settings from "../components/hr/settings/Settings";
-import Messages from "../components/hr/messages/Messages";
-import ManageJobs from "../components/hr/jobs/ManageJobs";
-import EditJob from "../components/hr/jobs/EditJob";
-import FindJob from "../pages/public/FindJob";
-import Resume from "../pages/candidate/Resume";
+const Home = lazy(() => import("../pages/public/Home"));
+const BrowseCompanies = lazy(() => import("../pages/public/BrowseCompanies"));
+const FindJob = lazy(() => import("../pages/public/FindJob"));
 
+const Dashboard = lazy(() => import("../pages/candidate/Dashboard"));
+const Applications = lazy(() => import("../pages/candidate/Applications"));
+const SavedJobs = lazy(() => import("../pages/candidate/SavedJobs"));
+const Notification = lazy(() => import("../pages/candidate/Notification"));
+const Profile = lazy(() => import("../pages/candidate/Profile"));
+const Resume = lazy(() => import("../pages/candidate/Resume"));
+
+const HRDashboard = lazy(() => import("../components/hr/dashboard/HRDashboard"));
+const CreateJob = lazy(() => import("../components/hr/jobs/CreateJob"));
+const CompanyProfile = lazy(() => import("../components/hr/company/CompanyProfile"));
+const ApplicantDetails = lazy(() => import("../components/hr/applicants/ApplicantDetails"));
+const Settings = lazy(() => import("../components/hr/settings/Settings"));
+const Messages = lazy(() => import("../components/hr/messages/Messages"));
+const ManageJobs = lazy(() => import("../components/hr/jobs/ManageJobs"));
+const EditJob = lazy(() => import("../components/hr/jobs/EditJob"));
+
+
+// Helper Function
+const Loadable = (Component) => (
+  <Suspense fallback={<Loader />}>
+    <Component />
+  </Suspense>
+);
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: Loadable(PublicLayout),
+    children: [
+      {
+        index: true,
+        element: Loadable(Home),
+      },
+      {
+        path: "find-job",
+        element: Loadable(FindJob),
+      },
+      {
+        path: "companies",
+        element: Loadable(BrowseCompanies),
+      },
+    ],
+  },
 
-    {
-        path: "/", element: <PublicLayout />,
-        children: [
-            {
-                path: "/",
-                element: <Home />
-            },
-            {
-                path: "find-job",
-                element: <FindJob />
-
-            },
-            {
-                path: "companies",
-                element: <BrowseCompanies />
-            },
-            {
-                path: "notifications",
-                element: <NotificationToasty />
-            }
-        ]
-
-    },
-    {
-        path: "/candidate",
-        element: <CandidateLayout />,
-
-        children: [
-            {
-                path: "*",
-                element: <Dashboard />,
-            },
-            {
-                path: "dashboard",
-                element: <Dashboard />,
-            },
-            {
-                path: "applications",
-                element: <Applications />,
-            },
-
-            {
-                path: "saved-jobs",
-                element: <SavedJobs />,
-            },
-
-            {
-                path: "notifications",
-                element: <Notification />,
-            },
-
-            {
-                path: "profile",
-                element: <Profile />,
-            },
-
-            {
-                path: "resume",
-                element: <Resume />,
-            },
-
-        ],
-    },
-    {
-        path: "hr", element: <HRLayout />,
-        children: [
-            {
-                path: "*",
-                element: <HRDashboard />
-            },
-            {
-                path: "dashboard",
-                element: <HRDashboard />
-
-            },
-            {
-                path: "add-job",
-                element: <CreateJob />
-            },
-            {
-                path: "company",
-                element: <CompanyProfile />
-            },
-            {
-                path: "candidates/:candidateId/:applicationId",
-                element: <ApplicantDetails />
-            },
-            {
-                path:"manage-jobs",
-                element:<ManageJobs />
-            },
-            {
-                path:"messages",
-                element:<Messages />
-            },
-            {
-                path:"edit-job/:jobId",
-                element:<EditJob />
-            },
-          
-        ]
-    }
-
-
-
+  {
+    path: "/candidate",
+    element: Loadable(CandidateLayout),
+    children: [
+      {
+        path: "dashboard",
+        element: Loadable(Dashboard),
+      },
+      {
+        path: "applications",
+        element: Loadable(Applications),
+      },
+    ],
+  },
 ]);
-
 
 export default router;
