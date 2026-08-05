@@ -65,12 +65,12 @@ const HeroSection = () => {
       params.set("location", location);
     }
 
-    navigate(`/find-jobs?${params.toString()}`);
+    navigate(`/find-jobs`);
   };
 
   const handlePopularSearch = (search) => {
     navigate(
-      `/find-jobs?keyword=${encodeURIComponent(search)}`
+      `/find-jobs`
     );
   };
 
