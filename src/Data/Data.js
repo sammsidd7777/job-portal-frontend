@@ -159,7 +159,7 @@ export const footerLinks = [
     links: [
       {
         name: "Find Jobs",
-        url: "/find-jobs",
+        url: "/find-job",
       },
       {
         name: "Companies",
@@ -167,7 +167,7 @@ export const footerLinks = [
       },
       {
         name: "Job Categories",
-        url: "/find-jobs",
+        url: "/find-jos",
       },
     ],
   },

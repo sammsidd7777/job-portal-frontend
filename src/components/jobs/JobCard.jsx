@@ -7,6 +7,8 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
+
+
 const JobCard = ({
   job,
   isSaved = false,
@@ -26,7 +28,7 @@ const JobCard = ({
         <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-xl font-bold text-white shadow-lg">
           {job.company?.logo ? (
             <img
-              src={job.company.logo}
+            src={job.company?.logo || "/favicon.png"}
               alt={job.company.name}
               className="h-full w-full object-cover"
             />

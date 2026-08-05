@@ -195,7 +195,7 @@ const FeaturedJobs = () => {
 
 
                 <Link
-                  to={`/job-details/${generateSlug(job.title)}`}
+                  to={`/find-job`}
                   className="flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-600 dark:bg-white dark:text-gray-900 dark:hover:bg-blue-600 dark:hover:text-white"
                 >
                   View Job
