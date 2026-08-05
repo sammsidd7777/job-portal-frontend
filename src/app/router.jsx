@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import Loader from "../helper/Loader ";
+import { createBrowserRouter } from "react-router-dom";
 
 const CandidateLayout = lazy(() => import("../layouts/CandidateLayout"));
 const PublicLayout = lazy(() => import("../layouts/PublicLayout"));
