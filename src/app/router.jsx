@@ -11,6 +11,7 @@ const FindJob = lazy(() => import("../pages/public/FindJob"));
 
 const Dashboard = lazy(() => import("../pages/candidate/Dashboard"));
 const Applications = lazy(() => import("../pages/candidate/Applications"));
+const SavedJobs = lazy(() => import("../pages/candidate/SavedJobs "));
 const Notification = lazy(() => import("../pages/candidate/Notification"));
 const Profile = lazy(() => import("../pages/candidate/Profile"));
 const Resume = lazy(() => import("../pages/candidate/Resume"));
