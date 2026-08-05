@@ -11,7 +11,7 @@ export const jobPosts = [
     description:
       "Build modern, scalable and beautiful user interfaces using React and modern frontend technologies.",
     role: ["React", "JavaScript", "Frontend"],
-    logo: "TN",
+    logo: "Thttps://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC6_ZEobWtq0TE7NfGlz3cCD-BGWUUOEn7J2iau39eDQ&s=10N",
   },
 
   {
@@ -26,7 +26,7 @@ export const jobPosts = [
     description:
       "Join our engineering team and build powerful web applications using MongoDB, Express, React and Node.js.",
     role: ["MongoDB", "Express", "React"],
-    logo: "CC",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC6_ZEobWtq0TE7NfGlz3cCD-BGWUUOEn7J2iau39eDQ&s=10",
   },
 
   {
@@ -41,7 +41,7 @@ export const jobPosts = [
     description:
       "Design intuitive digital experiences and create beautiful products used by thousands of users.",
     role: ["Figma", "UI Design", "UX Research"],
-    logo: "PS",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAEPdxsT22mZnMV3pgYTWebGMzJHDeHUF8cDYRrX-JpA&s=10",
   },
 
   {
@@ -56,7 +56,7 @@ export const jobPosts = [
     description:
       "Develop secure, scalable backend systems and REST APIs for next-generation applications.",
     role: ["Node.js", "Express", "MongoDB"],
-    logo: "CB",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAEPdxsT22mZnMV3pgYTWebGMzJHDeHUF8cDYRrX-JpA&s=10",
   },
 
   {
@@ -71,7 +71,7 @@ export const jobPosts = [
     description:
       "Work with product and engineering teams to create delightful experiences for our customers.",
     role: ["Product Design", "Figma", "Prototyping"],
-    logo: "GH",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAEPdxsT22mZnMV3pgYTWebGMzJHDeHUF8cDYRrX-JpA&s=10",
   },
 
   {
@@ -86,7 +86,7 @@ export const jobPosts = [
     description:
       "Create fast, responsive and accessible web applications with React and modern JavaScript.",
     role: ["React", "JavaScript", "API"],
-    logo: "IX",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbpZADoA-sHtohcXmKnfKHU-KC1QWPzECUIWgq3vyaIg&s=10",
   },
 ];
 
