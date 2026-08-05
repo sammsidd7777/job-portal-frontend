@@ -15,6 +15,7 @@ const Applications = lazy(() => import("../pages/candidate/Applications"));
 const Notification = lazy(() => import("../pages/candidate/Notification"));
 const Profile = lazy(() => import("../pages/candidate/Profile"));
 const Resume = lazy(() => import("../pages/candidate/Resume"));
+const Savejob = lazy(()=> import ("../pages/candidate/SavedJobs"))
 
 const HRDashboard = lazy(() => import("../components/hr/dashboard/HRDashboard"));
 const CreateJob = lazy(() => import("../components/hr/jobs/CreateJob"));
@@ -28,7 +29,7 @@ const EditJob = lazy(() => import("../components/hr/jobs/EditJob"));
 
 // Helper Function
 const Loadable = (Component) => (
-  <Suspense fallback={<Loader />}>
+  <Suspense fallback={<Loader message="Loading website..." />}>
     <Component />
   </Suspense>
 );
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
     path: "/candidate",
     element: Loadable(CandidateLayout),
     children: [
+         {
+         index:true,
+        element: Loadable(Dashboard),
+      },
       {
         path: "dashboard",
         element: Loadable(Dashboard),
@@ -65,6 +70,10 @@ const router = createBrowserRouter([
         path: "applications",
         element: Loadable(Applications),
       },
+      {
+        path:"saved-jobs",
+        element: Loadable(Savejob)
+      }
     ],
   },
 ]);

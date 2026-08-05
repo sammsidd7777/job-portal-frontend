@@ -23,14 +23,11 @@ import { useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 
 import navLogo from "../assets/hero.png";
+import Loader from "../helper/Loader ";
 
 const navigationItems = [
 
-    {
-    name: "",
-    path: "/candidate/dashboard",
-    icon: LayoutDashboard,
-  },,
+ 
   {
     name: "Dashboard",
     path: "/candidate/dashboard",
@@ -86,11 +83,7 @@ const CandidateLayout = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-500">
-          Loading dashboard...
-        </p>
-      </div>
+ <Loader message="Loading dashboard" />
     );
   }
 

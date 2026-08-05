@@ -23,7 +23,7 @@ const socialLists = [
   {
     name: "LinkedIn",
     icon: <RiLinkedinFill />,
-    url: "https://linkedin.com",
+    url: "https://www.linkedin.com/in/sammcoder/",
   },
   {
     name: "Twitter",
