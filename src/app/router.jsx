@@ -15,7 +15,7 @@ const Applications = lazy(() => import("../pages/candidate/Applications"));
 const Notification = lazy(() => import("../pages/candidate/Notification"));
 const Profile = lazy(() => import("../pages/candidate/Profile"));
 const Resume = lazy(() => import("../pages/candidate/Resume"));
-const Savejob = lazy(()=> import ("../pages/candidate/SavedJobs"))
+const Savejob = lazy(() => import("../pages/candidate/SavedJobs"))
 
 const HRDashboard = lazy(() => import("../components/hr/dashboard/HRDashboard"));
 const CreateJob = lazy(() => import("../components/hr/jobs/CreateJob"));
@@ -25,7 +25,7 @@ const Settings = lazy(() => import("../components/hr/settings/Settings"));
 const Messages = lazy(() => import("../components/hr/messages/Messages"));
 const ManageJobs = lazy(() => import("../components/hr/jobs/ManageJobs"));
 const EditJob = lazy(() => import("../components/hr/jobs/EditJob"));
-const UnderConstruction =lazy(() => import("../components/common/UnderConstruction"))
+const UnderConstruction = lazy(() => import("../components/common/UnderConstruction"))
 
 
 // Helper Function
@@ -56,11 +56,41 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "/hr",
+    element: Loadable(HRLayout),
+
+    children: [
+      {
+        index: true,
+        element: Loadable(HRDashboard)
+      },
+      {
+        path: "/",
+        element: Loadable(CreateJob)
+      },
+        {
+        path: "/",
+        element: Loadable(HRDashboard)
+      },  {
+        path: "/",
+        element: Loadable(HRDashboard)
+      },  {
+        path: "/",
+        element: Loadable(HRDashboard)
+      },  {
+        path: "/",
+        element: Loadable(HRDashboard)
+      },
+    ]
+
+  },
+
+  {
     path: "/candidate",
     element: Loadable(CandidateLayout),
     children: [
-         {
-         index:true,
+      {
+        index: true,
         element: Loadable(Dashboard),
       },
       {
@@ -72,16 +102,16 @@ const router = createBrowserRouter([
         element: Loadable(Applications),
       },
       {
-        path:"saved-jobs",
+        path: "saved-jobs",
         element: Loadable(Savejob)
       },
       {
-        path:"profile",
-        element:Loadable(Profile)
+        path: "profile",
+        element: Loadable(Profile)
       },
       {
-        path:"*",
-        element:Loadable(UnderConstruction)
+        path: "*",
+        element: Loadable(UnderConstruction)
       }
     ],
   },
