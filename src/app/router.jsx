@@ -65,8 +65,8 @@ const router = createBrowserRouter([
         element: Loadable(HRDashboard)
       },
       {
-        path: "/",
-        element: Loadable(CreateJob)
+        path: "dashboard",
+        element: Loadable(HRDashboard)
       },
         {
         path: "/",
