@@ -87,6 +87,7 @@ const router = createBrowserRouter([
         element: Loadable(Settings)
       },  {
         path: "messages",
+        
         element: Loadable(Messages)
       },
     ]
