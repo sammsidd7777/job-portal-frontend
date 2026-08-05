@@ -94,7 +94,7 @@ const PopularCategories = () => {
           </div>
 
           <Link
-            to="/find-jobs"
+            to="/find-job"
             className="group flex w-fit items-center gap-2 rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-600 hover:text-blue-600 dark:border-slate-800 dark:text-slate-300"
           >
             View all jobs
@@ -115,7 +115,7 @@ const PopularCategories = () => {
             return (
               <Link
                 key={category.name}
-                to="/find-jobs"
+                to="/find-job"
                 className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900"
               >
 
