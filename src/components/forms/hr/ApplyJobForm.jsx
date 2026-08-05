@@ -50,6 +50,8 @@ function ApplyJobForm({ jobId, setIsApply, isDemo = false }) {
       setMessage("Application submitted successfully!");
       reset();
       closeForm();
+      setLoading(false);
+
 
     } catch (error) {
       setMessage(

@@ -4,8 +4,11 @@ import { SlHeart } from "react-icons/sl";
 import { IoMdTime } from "react-icons/io";
 import { MapPin, ArrowUpRight, Sparkles } from "lucide-react";
 import { generateSlug } from "../../utils/index.js";
+import { useState } from "react";
 
 const FeaturedJobs = () => {
+               const [loaded, setLoaded] = useState(false);
+
   return (
     <section className="relative overflow-hidden bg-[#f8faff] py-24 dark:bg-gray-950">
 
@@ -92,11 +95,18 @@ const FeaturedJobs = () => {
 
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-100 bg-gradient-to-br from-blue-50 to-indigo-100 p-3 dark:border-gray-700 dark:from-gray-800 dark:to-gray-700">
 
-                  <img
-                    src={job.logo}
-                    alt={job.company}
-                    className="h-10 w-10 object-contain transition duration-500 group-hover:scale-110"
-                  />
+
+<img
+  src={job.logo}
+  alt={job.company}
+  loading="lazy"
+  onLoad={() => setLoaded(true)}
+  className={`h-10 w-10 object-contain transition duration-500 group-hover:scale-110 ${
+    loaded ? "opacity-100" : "opacity-0"
+  }`}
+/>
+
+{!loaded && <div className="h-10 w-10 animate-pulse bg-gray-200 rounded" />}
 
                 </div>
 
