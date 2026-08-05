@@ -25,6 +25,12 @@ import { logout } from "../redux/authSlice";
 import navLogo from "../assets/hero.png";
 
 const navigationItems = [
+
+    {
+    name: "",
+    path: "/candidate/dashboard",
+    icon: LayoutDashboard,
+  },,
   {
     name: "Dashboard",
     path: "/candidate/dashboard",
