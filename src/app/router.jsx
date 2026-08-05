@@ -25,6 +25,7 @@ const Settings = lazy(() => import("../components/hr/settings/Settings"));
 const Messages = lazy(() => import("../components/hr/messages/Messages"));
 const ManageJobs = lazy(() => import("../components/hr/jobs/ManageJobs"));
 const EditJob = lazy(() => import("../components/hr/jobs/EditJob"));
+const UnderConstruction =lazy(() => import("../components/common/UnderConstruction"))
 
 
 // Helper Function
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
       {
         path:"saved-jobs",
         element: Loadable(Savejob)
+      },
+      {
+        path:"profile",
+        element:Loadable(Profile)
+      },
+      {
+        path:"*",
+        element:Loadable(UnderConstruction)
       }
     ],
   },
