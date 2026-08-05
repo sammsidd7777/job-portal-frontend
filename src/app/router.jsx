@@ -69,17 +69,25 @@ const router = createBrowserRouter([
         element: Loadable(HRDashboard)
       },
         {
-        path: "/",
-        element: Loadable(HRDashboard)
+        path: "add-job",
+        element: Loadable(CreateJob)
       },  {
-        path: "/",
-        element: Loadable(HRDashboard)
+        path: "manage-jobs",
+        element: Loadable(ManageJobs)
       },  {
-        path: "/",
-        element: Loadable(HRDashboard)
+        path: "applicants",
+        element: Loadable(ApplicantDetails)
+      },
+        {
+        path: "company",
+        element: Loadable(CompanyProfile)
+      },
+        {
+        path: "settings",
+        element: Loadable(Settings)
       },  {
-        path: "/",
-        element: Loadable(HRDashboard)
+        path: "messages",
+        element: Loadable(Messages)
       },
     ]
 
