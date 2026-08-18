@@ -15,6 +15,7 @@ const JobCard = ({
   onSave,
   onApply,
   isSaving = false,
+  jobType
 }) => {
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-900">
@@ -122,13 +123,30 @@ const JobCard = ({
 
         {/* APPLY */}
 
-        <button
-          onClick={() => onApply?.(job)}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:shadow-xl"
-        >
-          Apply Now
-          <ArrowUpRight size={18} />
-        </button>
+{job.jobType === "external" ? (
+  <button
+    onClick={() =>
+      window.open(
+        job.externalApplyUrl,
+        "_blank",
+        "noopener,noreferrer"
+      )
+    }
+    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-0.5 hover:shadow-xl"
+  >
+    Apply on Company Website
+    <ArrowUpRight size={18} />
+  </button>
+) : (
+  <button
+    onClick={() => onApply?.(job)}
+    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:shadow-xl"
+  >
+    Apply Now
+    <ArrowUpRight size={18} />
+  </button>
+)}
+      
 
       </div>
 

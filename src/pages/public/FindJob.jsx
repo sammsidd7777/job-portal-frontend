@@ -542,6 +542,7 @@ const FindJob = () => {
                                             setIsApply(true);
                                         }}
                                         isSaving={saving}
+                                        jobType={job?.jobType}
                                     />
                                 ))}
                             </div>

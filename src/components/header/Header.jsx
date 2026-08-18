@@ -5,15 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import navLogo from "../../../public/favicon.png";
 
 // React Icons
-import { IoMenuSharp, IoClose } from "react-icons/io5";
 import { IoMdLogIn } from "react-icons/io";
 import { FaRegUserCircle, FaChevronDown } from "react-icons/fa";
 
 // Lucide Icons
 import {
+  Home,
+  BriefcaseBusiness,
+  Building2,
+  Bookmark,
+  User,
+  LogIn,
   LogOut,
   LayoutDashboard,
-  BriefcaseBusiness,
 } from "lucide-react";
 
 // Components
@@ -25,7 +29,6 @@ import { logout } from "../../redux/authSlice";
 import { useLogoutUserMutation } from "../../RTK/AuthService";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginCard, setIsLoginCard] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -36,24 +39,27 @@ const Header = () => {
 
   const [logoutUser, { isLoading }] = useLogoutUserMutation();
 
-  // ================= LOGOUT =================
+  // =====================================================
+  // LOGOUT
+  // =====================================================
 
   const handleLogout = async () => {
     try {
-      
       dispatch(logout());
-      
+
       setIsProfileOpen(false);
-      setIsMenuOpen(false);
-      
+
       await logoutUser().unwrap();
+
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  // ================= NAVIGATION =================
+  // =====================================================
+  // DESKTOP NAVIGATION
+  // =====================================================
 
   const navLinks = [
     {
@@ -64,31 +70,90 @@ const Header = () => {
     {
       name: "Companies",
       path: "/companies",
+      icon: Building2,
     },
   ];
+
+  // =====================================================
+  // MOBILE + TABLET BOTTOM NAVIGATION
+  // =====================================================
+
+  const mobileNavLinks = user
+    ? [
+        {
+          name: "Home",
+          path: "/",
+          icon: Home,
+        },
+        {
+          name: "Jobs",
+          path: "/find-job",
+          icon: BriefcaseBusiness,
+        },
+        {
+          name: "Companies",
+          path: "/companies",
+          icon: Building2,
+        },
+        {
+          name: "Saved",
+          path: "/saved-jobs",
+          icon: Bookmark,
+        },
+        {
+          name: "Profile",
+          path: "/candidate",
+          icon: User,
+        },
+      ]
+    : [
+        {
+          name: "Home",
+          path: "/",
+          icon: Home,
+        },
+        {
+          name: "Jobs",
+          path: "/find-job",
+          icon: BriefcaseBusiness,
+        },
+        {
+          name: "Companies",
+          path: "/companies",
+          icon: Building2,
+        },
+        {
+          name: "Login",
+          path: "#login",
+          icon: LogIn,
+        },
+      ];
 
   return (
     <>
       {/* =====================================================
-          HEADER
+          FIXED TOP HEADER
       ====================================================== */}
 
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/80 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/80">
+     <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/90 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/90">
 
-        {/* ================= NAVBAR ================= */}
+        {/* =====================================================
+            NAVBAR
+        ====================================================== */}
 
-        <nav className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <nav className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:h-[76px] lg:px-8">
 
-          {/* ================= LOGO ================= */}
+          {/* =====================================================
+              LOGO
+          ====================================================== */}
 
           <Link
             to="/"
             className="group flex items-center gap-3"
           >
-
             {/* Logo Image */}
 
-            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg shadow-blue-500/10 transition duration-300 group-hover:scale-105 dark:border-slate-700 dark:bg-slate-900 sm:h-12 sm:w-12">
+            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg shadow-blue-500/10 transition duration-300 group-hover:scale-105 dark:border-slate-700 dark:bg-slate-900 sm:h-11 sm:w-11 lg:h-12 lg:w-12">
 
               <img
                 src={navLogo}
@@ -121,22 +186,19 @@ const Header = () => {
               </p>
 
             </div>
-
           </Link>
-
 
           {/* =====================================================
               DESKTOP NAVIGATION
+              ONLY 1024px+
           ====================================================== */}
 
-          <div className="hidden items-center gap-10 md:flex">
+          <div className="hidden items-center gap-10 lg:flex">
 
             {navLinks.map((item) => {
-
               const Icon = item.icon;
 
               return (
-
                 <NavLink
                   key={item.name}
                   to={item.path}
@@ -169,32 +231,25 @@ const Header = () => {
                     }
                   `}
                 >
-
                   {Icon && (
-
                     <Icon
                       size={17}
                       className="transition-transform duration-300 group-hover:-translate-y-0.5"
                     />
-
                   )}
 
                   {item.name}
-
                 </NavLink>
-
               );
-
             })}
 
           </div>
-
 
           {/* =====================================================
               DESKTOP ACTIONS
           ====================================================== */}
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 lg:flex">
 
             {user ? (
 
@@ -203,7 +258,9 @@ const Header = () => {
                 {/* Profile Button */}
 
                 <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  onClick={() =>
+                    setIsProfileOpen(!isProfileOpen)
+                  }
                   className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition-all duration-300 hover:border-blue-400 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900"
                 >
 
@@ -215,10 +272,9 @@ const Header = () => {
 
                   </div>
 
-
                   {/* User Info */}
 
-                  <div className="hidden text-left lg:block">
+                  <div className="hidden text-left xl:block">
 
                     <p className="max-w-[120px] truncate text-sm font-bold text-slate-800 dark:text-white">
 
@@ -234,26 +290,28 @@ const Header = () => {
 
                   </div>
 
-
                   {/* Arrow */}
 
                   <FaChevronDown
                     size={11}
                     className={`text-slate-400 transition-transform duration-300 ${
-                      isProfileOpen ? "rotate-180" : ""
+                      isProfileOpen
+                        ? "rotate-180"
+                        : ""
                     }`}
                   />
 
                 </button>
 
-
-                {/* ================= PROFILE DROPDOWN ================= */}
+                {/* =====================================================
+                    PROFILE DROPDOWN
+                ====================================================== */}
 
                 {isProfileOpen && (
 
                   <div className="absolute right-0 top-14 w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl dark:border-slate-700 dark:bg-slate-900">
 
-                    {/* User Info */}
+                    {/* User Information */}
 
                     <div className="border-b border-slate-100 px-3 py-3 dark:border-slate-800">
 
@@ -271,12 +329,13 @@ const Header = () => {
 
                     </div>
 
-
-                    {/* Dashboard */}
+                    {/* Candidate Dashboard */}
 
                     <Link
                       to="/candidate"
-                      onClick={() => setIsProfileOpen(false)}
+                      onClick={() =>
+                        setIsProfileOpen(false)
+                      }
                       className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-800"
                     >
 
@@ -285,7 +344,6 @@ const Header = () => {
                       Candidate Dashboard
 
                     </Link>
-
 
                     {/* Logout */}
 
@@ -314,7 +372,9 @@ const Header = () => {
               /* LOGIN BUTTON */
 
               <button
-                onClick={() => setIsLoginCard(true)}
+                onClick={() =>
+                  setIsLoginCard(true)
+                }
                 className="group flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/30 active:scale-95"
               >
 
@@ -329,196 +389,137 @@ const Header = () => {
 
             )}
 
-            {/* Theme */}
+            {/* Theme Toggle */}
 
             <ThemeToggle />
 
           </div>
 
-
           {/* =====================================================
-              MOBILE ACTIONS
+              MOBILE + TABLET TOP ACTIONS
           ====================================================== */}
 
-          <div className="flex items-center gap-2 md:hidden">
-
-            {/* Theme */}
+          <div className="flex items-center gap-2 lg:hidden">
 
             <ThemeToggle />
-
-
-            {/* Menu Button */}
-
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition-all hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-              aria-label="Toggle menu"
-            >
-
-              {isMenuOpen ? (
-
-                <IoClose size={24} />
-
-              ) : (
-
-                <IoMenuSharp size={24} />
-
-              )}
-
-            </button>
 
           </div>
 
         </nav>
 
+      </header>
 
-        {/* =====================================================
-            MOBILE MENU
-        ====================================================== */}
+      {/* =====================================================
+          MOBILE + TABLET FIXED BOTTOM NAVIGATION
+          < 1024px
+      ====================================================== */}
+
+      <nav className="fixed bottom-0 left-0 right-0 z-[100] border-t border-slate-200/80 bg-white/95 shadow-[0_-5px_20px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/95 lg:hidden">
 
         <div
-          className={`
-            overflow-hidden border-t border-slate-200/70
-            bg-white transition-all duration-300
-            dark:border-slate-800 dark:bg-slate-950
-            md:hidden
-
-            ${
-              isMenuOpen
-                ? "max-h-[600px] opacity-100"
-                : "max-h-0 opacity-0"
-            }
-          `}
+          className={`mx-auto grid h-[68px] max-w-lg ${
+            user
+              ? "grid-cols-5"
+              : "grid-cols-4"
+          }`}
         >
 
-          <div className="space-y-3 px-4 py-5 sm:px-6">
+          {mobileNavLinks.map((item) => {
 
+            const Icon = item.icon;
 
-            {/* ================= MOBILE USER ================= */}
+            {/* =================================================
+                LOGIN BUTTON
+            ================================================== */}
 
-            {user && (
+            if (item.name === "Login") {
 
-              <div className="mb-4 flex items-center gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-slate-900">
+              return (
+                <button
+                  key={item.name}
+                  onClick={() =>
+                    setIsLoginCard(true)
+                  }
+                  className="flex flex-col items-center justify-center gap-1 text-slate-500 transition active:scale-95 dark:text-slate-400"
+                >
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+                  <div className="flex h-7 w-10 items-center justify-center">
 
-                  <FaRegUserCircle size={20} />
+                    <Icon size={21} />
 
-                </div>
+                  </div>
 
-                <div className="min-w-0">
+                  <span className="text-[10px] font-semibold">
 
-                  <p className="truncate font-bold text-slate-900 dark:text-white">
+                    Login
 
-                    {user?.name || "Candidate"}
+                  </span>
 
-                  </p>
+                </button>
+              );
+            }
 
-                  <p className="truncate text-xs text-slate-500">
+            {/* =================================================
+                NORMAL NAVIGATION
+            ================================================== */}
 
-                    {user?.email}
-
-                  </p>
-
-                </div>
-
-              </div>
-
-            )}
-
-
-            {/* ================= MOBILE LINKS ================= */}
-
-            {navLinks.map((item) => (
-
+            return (
               <NavLink
                 key={item.name}
                 to={item.path}
-                onClick={() => setIsMenuOpen(false)}
-                className={({ isActive }) => `
-                  flex items-center rounded-2xl px-4 py-3.5
-                  text-sm font-semibold transition
-
-                  ${
+                className={({ isActive }) =>
+                  `flex flex-col items-center justify-center gap-1 transition active:scale-95 ${
                     isActive
-                      ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
-                      : "text-slate-700 hover:bg-slate-50 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-900"
-                  }
-                `}
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-slate-500 dark:text-slate-400"
+                  }`
+                }
               >
 
-                {item.name}
+                {({ isActive }) => (
+
+                  <>
+
+                    {/* Icon Background */}
+
+                    <div
+                      className={`flex h-7 w-10 items-center justify-center rounded-xl transition ${
+                        isActive
+                          ? "bg-blue-50 dark:bg-blue-950/40"
+                          : ""
+                      }`}
+                    >
+
+                      <Icon
+                        size={21}
+                        strokeWidth={
+                          isActive
+                            ? 2.5
+                            : 2
+                        }
+                      />
+
+                    </div>
+
+                    {/* Label */}
+
+                    <span className="text-[10px] font-semibold">
+
+                      {item.name}
+
+                    </span>
+
+                  </>
+
+                )}
 
               </NavLink>
-
-            ))}
-
-
-            {/* ================= LOGGED IN ================= */}
-
-            {user ? (
-
-              <>
-
-                {/* Dashboard */}
-
-                <Link
-                  to="/candidate"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 py-3.5 font-bold text-white shadow-lg shadow-blue-500/20"
-                >
-
-                  <LayoutDashboard size={18} />
-
-                  Candidate Dashboard
-
-                </Link>
-
-
-                {/* Logout */}
-
-                <button
-                  onClick={handleLogout}
-                  disabled={isLoading}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-50 py-3.5 font-bold text-red-500 transition hover:bg-red-100 dark:bg-red-950/30 dark:hover:bg-red-950/50"
-                >
-
-                  <LogOut size={18} />
-
-                  {isLoading
-                    ? "Logging out..."
-                    : "Logout"}
-
-                </button>
-
-              </>
-
-            ) : (
-
-              /* LOGIN */
-
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setIsLoginCard(true);
-                }}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 py-3.5 font-bold text-white shadow-lg shadow-blue-500/20"
-              >
-
-                <IoMdLogIn size={19} />
-
-                Login / Sign Up
-
-              </button>
-
-            )}
-
-          </div>
+            );
+          })}
 
         </div>
 
-      </header>
-
+      </nav>
 
       {/* =====================================================
           AUTH MODAL
@@ -528,16 +529,22 @@ const Header = () => {
 
         <div
           className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm"
-          onClick={() => setIsLoginCard(false)}
+          onClick={() =>
+            setIsLoginCard(false)
+          }
         >
 
           <div
             className="w-full max-w-md"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) =>
+              e.stopPropagation()
+            }
           >
 
             <AuthPage
-              onClose={() => setIsLoginCard(false)}
+              onClose={() =>
+                setIsLoginCard(false)
+              }
             />
 
           </div>
