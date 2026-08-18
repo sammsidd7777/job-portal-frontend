@@ -40,13 +40,13 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await logoutUser().unwrap();
-
+      
       dispatch(logout());
-
+      
       setIsProfileOpen(false);
       setIsMenuOpen(false);
-
+      
+      await logoutUser().unwrap();
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
