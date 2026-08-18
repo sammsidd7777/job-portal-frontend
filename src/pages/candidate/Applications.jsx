@@ -124,9 +124,7 @@ const Applications = () => {
     <div className="w-full space-y-8">
 
 
-      {/* ================================= */}
-      {/* HEADER */}
-      {/* ================================= */}
+
 
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
 
