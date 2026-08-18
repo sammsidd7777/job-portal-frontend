@@ -395,15 +395,7 @@ const Header = () => {
 
           </div>
 
-          {/* =====================================================
-              MOBILE + TABLET TOP ACTIONS
-          ====================================================== */}
-
-          <div className="flex items-center gap-2 lg:hidden">
-
-            <ThemeToggle />
-
-          </div>
+        
 
         </nav>
 
