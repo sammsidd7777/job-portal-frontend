@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Seo from "../../common/Seo";
 import {
   Search,
   Plus,
@@ -86,6 +87,7 @@ const ManageJobs = () => {
 
   return (
     <div className="space-y-6">
+      <Seo title="Manage jobs" noindex />
 
       {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

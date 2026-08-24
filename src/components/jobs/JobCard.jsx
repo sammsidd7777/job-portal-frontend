@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Bookmark,
   BookmarkCheck,
@@ -9,6 +10,7 @@ import {
   BadgeCheck,
   Sparkles,
 } from "lucide-react";
+import getPostedTime from "./getPostedTime";
 
 const JobCard = ({
   job,
@@ -17,19 +19,18 @@ const JobCard = ({
   onApply,
   isSaving = false,
   jobType,
-  logo,
+  companyLogo,
   uploadedByRole,
   featured = false,
 }) => {
-  // External job uses companyLogo
-  // Internal job uses company.logo
-  const companyLogo =
-    jobType === "external" ? logo || job?.companyLogo : job?.company?.logo;
-
+  // External job uses companyName/companyLogo fields directly on the job.
+  // Internal job uses the populated company document.
   const companyName =
     jobType === "external"
       ? job?.companyName || "Company"
-      : job?.company?.name || "Company";
+      : job?.company?.companyName || "Company";
+
+  const resolvedLogo = companyLogo || job?.company?.companyLogo;
 
   return (
     <article
@@ -41,9 +42,8 @@ const JobCard = ({
 
         dark:bg-[#0B0D12]
 
-        ${
-          featured
-            ? `
+        ${featured
+          ? `
               border-amber-300/60
               shadow-[0_1px_2px_rgba(15,23,42,0.06),0_0_0_1px_rgba(245,158,11,0.08)]
               hover:-translate-y-1
@@ -53,7 +53,7 @@ const JobCard = ({
               dark:border-amber-500/25
               dark:hover:border-amber-500/40
             `
-            : `
+          : `
               border-slate-200/70
               shadow-[0_1px_2px_rgba(15,23,42,0.04)]
               hover:-translate-y-1
@@ -104,9 +104,9 @@ const JobCard = ({
             dark:border-white/10 dark:from-white/[0.06] dark:to-white/[0.02] dark:text-slate-400
           "
         >
-          {companyLogo ? (
+          {resolvedLogo ? (
             <img
-              src={companyLogo}
+              src={resolvedLogo}
               alt={companyName}
               className="h-full w-full object-cover"
               onError={(e) => {
@@ -144,17 +144,21 @@ const JobCard = ({
 
       {/* JOB TITLE */}
       <div className="relative mt-6">
-        <h3
-          className="
-            line-clamp-1
-            font-serif text-[1.3rem] font-medium
-            tracking-[-0.01em] text-slate-900
+        <Link to={`/jobs/${job._id}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 rounded-md">
+          <h3
+            className="
+              line-clamp-1
+              font-serif text-[1.3rem] font-medium
+              tracking-[-0.01em] text-slate-900
+              transition-colors duration-200
+              group-hover:text-slate-700
 
-            dark:text-white
-          "
-        >
-          {job.title}
-        </h3>
+              dark:text-white dark:group-hover:text-slate-200
+            "
+          >
+            {job.title}
+          </h3>
+        </Link>
 
         <p className="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
           <span className="font-medium text-slate-700 dark:text-slate-300">{companyName}</span>
@@ -162,36 +166,49 @@ const JobCard = ({
           <span>{job.location || "Remote"}</span>
         </p>
       </div>
-
       {/* TRUST BADGE */}
       <div className="relative mt-4">
         {uploadedByRole === "admin" ? (
           <span
             className="
-              inline-flex items-center gap-1.5
-              rounded-full border border-slate-200 bg-slate-50/80
-              px-2.5 py-1
-              text-[11px] font-semibold uppercase tracking-wide text-slate-600
-
-              dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300
-            "
+        inline-flex items-center gap-1.5
+        rounded-full
+        border border-blue-200
+        bg-blue-50
+        px-2.5 py-1
+        text-[11px]
+        font-semibold
+        uppercase
+        tracking-wide
+        text-blue-700
+        dark:border-blue-500/20
+        dark:bg-blue-500/10
+        dark:text-blue-400
+      "
           >
-            <BadgeCheck size={13} strokeWidth={2} />
-            Verified & secure
+            <BadgeCheck size={13} strokeWidth={2.5} />
+            Verified & Secure
           </span>
         ) : (
           <span
             className="
-              inline-flex items-center gap-1.5
-              rounded-full border border-slate-200 bg-slate-50/80
-              px-2.5 py-1
-              text-[11px] font-semibold uppercase tracking-wide text-slate-500
-
-              dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-400
-            "
+        inline-flex items-center gap-1.5
+        rounded-full
+        border border-emerald-200
+        bg-emerald-50
+        px-2.5 py-1
+        text-[11px]
+        font-semibold
+        uppercase
+        tracking-wide
+        text-emerald-700
+        dark:border-emerald-500/20
+        dark:bg-emerald-500/10
+        dark:text-emerald-400
+      "
           >
-            <ShieldCheck size={13} strokeWidth={2} />
-            Trusted listing
+            <ShieldCheck size={13} strokeWidth={2.5} />
+            Trusted Listing
           </span>
         )}
       </div>
@@ -222,6 +239,14 @@ const JobCard = ({
           "Explore this opportunity and take the next step in your professional journey."}
       </p>
 
+      <Link
+        to={`/jobs/${job._id}`}
+        className="relative mt-2 inline-flex w-fit items-center gap-1 text-[12.5px] font-semibold text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+      >
+        View full details
+        <ArrowUpRight size={12} strokeWidth={2.25} />
+      </Link>
+
       {/* DIVIDER */}
       <div className="relative mt-6 border-t border-slate-100 dark:border-white/[0.08]" />
 
@@ -246,7 +271,9 @@ const JobCard = ({
 
           <div className="flex items-center gap-1 text-[12px] text-slate-400">
             <Clock3 size={13} strokeWidth={1.75} />
-            Recently posted
+            <div className="flex items-center gap-1 text-xs text-slate-400">
+              {getPostedTime(job.createdAt)}
+            </div>
           </div>
         </div>
 

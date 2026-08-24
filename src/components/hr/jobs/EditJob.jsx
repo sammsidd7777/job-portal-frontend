@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Seo from "../../common/Seo";
 import {
   BriefcaseBusiness,
   MapPin,
@@ -126,6 +127,7 @@ useEffect(() => {
 
   return (
     <>
+      <Seo title="Edit job" noindex />
       <NotificationToasty
         message={toastMessage}
         type={toastType}

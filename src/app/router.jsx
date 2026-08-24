@@ -9,6 +9,11 @@ const HRLayout = lazy(() => import("../layouts/HRLayout"));
 const Home = lazy(() => import("../pages/public/Home"));
 const BrowseCompanies = lazy(() => import("../pages/public/BrowseCompanies"));
 const FindJob = lazy(() => import("../pages/public/FindJob"));
+const JobDetails = lazy(() => import("../pages/public/JobDetails"));
+const CompanyDetails = lazy(() => import("../pages/public/CompanyDetails"));
+const PrivacyPolicy = lazy(() => import("../pages/public/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("../pages/public/TermsOfService"));
+const NotFound = lazy(() => import("../components/common/NotFound"));
 
 const Dashboard = lazy(() => import("../pages/candidate/Dashboard"));
 const Applications = lazy(() => import("../pages/candidate/Applications"));
@@ -49,50 +54,77 @@ const router = createBrowserRouter([
         element: Loadable(FindJob),
       },
       {
+        path: "jobs/:id",
+        element: Loadable(JobDetails),
+      },
+      {
         path: "companies",
         element: Loadable(BrowseCompanies),
+      },
+      {
+        path: "company/:id",
+        element: Loadable(CompanyDetails),
+      },
+      {
+        path: "privacy",
+        element: Loadable(PrivacyPolicy),
+      },
+      {
+        path: "terms",
+        element: Loadable(TermsOfService),
+      },
+      {
+        path: "*",
+        element: Loadable(NotFound),
       },
     ],
   },
 
-  {
-    path: "/hr",
-    element: Loadable(HRLayout),
+{
+  path: "/hr",
+  element: Loadable(HRLayout),
 
-    children: [
-      {
-        index: true,
-        element: Loadable(HRDashboard)
-      },
-      {
-        path: "dashboard",
-        element: Loadable(HRDashboard)
-      },
-        {
-        path: "add-job",
-        element: Loadable(CreateJob)
-      },  {
-        path: "manage-jobs",
-        element: Loadable(ManageJobs)
-      },  {
-        path: "applicants",
-        element: Loadable(ApplicantDetails)
-      },
-        {
-        path: "company",
-        element: Loadable(CompanyProfile)
-      },
-        {
-        path: "settings",
-        element: Loadable(Settings)
-      },  {
-        path: "messages",
-        
-        element: Loadable(Messages)
-      },
-    ]
+  children: [
+    {
+      index: true,
+      element: Loadable(HRDashboard),
+    },
+    {
+      path: "dashboard",
+      element: Loadable(HRDashboard),
+    },
+    {
+      path: "add-job",
+      element: Loadable(CreateJob),
+    },
+    {
+      path: "manage-jobs",
+      element: Loadable(ManageJobs),
+    },
+    {
+      path: "applicants",
+      element: Loadable(ApplicantDetails),
+    },
+    {
+      path: "company",
+      element: Loadable(CompanyProfile),
+    },
+    {
+      path: "settings",
+      element: Loadable(Settings),
+    },
+    {
+      path: "messages",
+      element: Loadable(Messages),
+    },
 
-  },
+    // Candidate/Application Detail
+    {
+      path: "candidates/:candidateId/:applicationId",
+      element: Loadable(ApplicantDetails),
+    },
+  ],
+},
 
   {
     path: "/candidate",

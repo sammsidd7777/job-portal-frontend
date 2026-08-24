@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Seo from "../../common/Seo";
 import {
   Building2,
   Camera,
@@ -206,6 +207,7 @@ const CompanyProfile = () => {
       sm:p-6
       lg:p-8
     ">
+      <Seo title="Company profile" noindex />
 
       {/* PAGE HEADER */}
       <div className="mb-8">

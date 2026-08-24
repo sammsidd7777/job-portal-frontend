@@ -6,6 +6,7 @@ import {
 import { useForm } from "react-hook-form";
 
 import EditProfileImg from "../../components/forms/candidate/EditProfileImg";
+import Seo from "../../components/common/Seo";
 import ArrayInputField from "../../components/forms/candidate/ArrayInputField";
 import AddEducation from "../../components/forms/candidate/AddEducation";
 import { Link } from "react-router-dom";
@@ -110,6 +111,7 @@ const Profile = () => {
 
   return (
     <div className="w-full">
+      <Seo title="My profile" noindex />
 
       <div className="mx-auto max-w-7xl">
 

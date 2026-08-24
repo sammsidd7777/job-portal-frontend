@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search, Building2, Sparkles, ArrowUpRight } from "lucide-react";
 import { useGetAllcompanyQuery } from "../../RTK/CompanyService";
+import Seo from "../../components/common/Seo";
 
 import staticCompanies from "../../Data/companyData";
 import CompanyCard from "../../components/company/CompanyCard";
@@ -39,6 +40,11 @@ return companyName
 });
 
 return ( <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
+<Seo
+  title="Browse companies"
+  description="Explore companies hiring right now. Discover open roles, company profiles, and industries."
+  path="/companies"
+/>
 
 
   {/* ================= HERO ================= */}

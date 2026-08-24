@@ -9,7 +9,6 @@ ArrowUpRight,
 
 const CompanyCard = ({ company }) => {
 
-    console.log(company,"cardSection")
 return (
 <Link
 to={`/company/${company._id}`}
@@ -27,7 +26,7 @@ transition-all duration-300
 >
 {/* Company Header */} <div className="flex items-center justify-between gap-4 mb-5"> <div className="flex items-center gap-4 min-w-0">
 <img
-src={company.logo || "/meta.png"}
+src={company.companyLogo || company.logo || "/meta.png"}
 alt={company.companyName}
 className="
 w-16 h-16

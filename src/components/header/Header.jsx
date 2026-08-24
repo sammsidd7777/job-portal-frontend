@@ -22,7 +22,6 @@ import {
 
 // Components
 import AuthPage from "../Auth/AuthPage";
-import ThemeToggle from "../Theme/toggleTheme";
 
 // Redux / API
 import { logout } from "../../redux/authSlice";
@@ -389,9 +388,7 @@ const Header = () => {
 
             )}
 
-            {/* Theme Toggle */}
 
-            <ThemeToggle />
 
           </div>
 

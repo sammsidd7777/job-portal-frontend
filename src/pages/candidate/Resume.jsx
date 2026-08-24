@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useGetProfileQuery, useUploadResumeMutation } from '../../RTK/AuthService';
+import Seo from '../../components/common/Seo';
 
 const Resume = () => {
 
@@ -38,6 +39,7 @@ const Resume = () => {
 
   return (
     <div className="w-full">
+      <Seo title="My resume" noindex />
 
       <div className="mx-auto max-w-7xl">
 

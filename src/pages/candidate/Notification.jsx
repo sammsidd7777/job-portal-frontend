@@ -5,6 +5,7 @@ import {
   MessageSquare,
   Megaphone,
 } from "lucide-react";
+import Seo from "../../components/common/Seo";
 
 const Notification = () => {
   const [settings, setSettings] = useState({
@@ -46,6 +47,7 @@ const Notification = () => {
 
   return (
     <div className="w-full">
+      <Seo title="Notifications" noindex />
 
       {/* HEADER */}
 

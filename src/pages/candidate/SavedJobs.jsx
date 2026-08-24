@@ -5,6 +5,7 @@ import {
   useDeleteSavedJobMutation,
   useGetSavedJobsQuery,
 } from "../../RTK/savedJobsApi";
+import Seo from "../../components/common/Seo";
 
 const SavedJobs = () => {
   const {
@@ -48,6 +49,7 @@ const SavedJobs = () => {
 
   return (
     <div className="w-full">
+      <Seo title="Saved jobs" noindex />
 
       {/* ================================================= */}
       {/* HEADER */}

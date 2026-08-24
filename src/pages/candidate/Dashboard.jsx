@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import {
   useGetUserDashboardQuery,
 } from "../../RTK/AuthService";
+import Seo from "../../components/common/Seo";
 
 const Dashboard = () => {
   const {
@@ -43,6 +44,7 @@ const Dashboard = () => {
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6 sm:space-y-8">
+      <Seo title="Dashboard" noindex />
 
       {/* =====================================================
           HEADER

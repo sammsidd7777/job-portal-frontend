@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   useGetApplyListQuery,
 } from "../../RTK/AuthService";
+import Seo from "../../components/common/Seo";
 
 
 const statusColors = {
@@ -122,6 +123,7 @@ const Applications = () => {
   return (
 
     <div className="w-full space-y-8">
+      <Seo title="Applications" noindex />
 
 
 

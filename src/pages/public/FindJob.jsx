@@ -1,5 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
     Search,
     MapPin,
@@ -22,6 +23,7 @@ import { staticJobs } from "../../Data/staticJobs";
 import NotificationToasty from "../../components/common/NotificationToasty";
 import ApplyJobForm from "../../components/forms/hr/ApplyJobForm";
 import JobCard from "../../components/jobs/JobCard";
+import Seo from "../../components/common/Seo";
 
 const FindJob = () => {
     /* ================= SEARCH STATE ================= */
@@ -30,6 +32,18 @@ const FindJob = () => {
     const [location, setLocation] = useState("");
     const [employmentType, setEmploymentType] = useState("");
     const [skills, setSkills] = useState("");
+
+    /* ================= URL SEARCH PARAM SYNC ================= */
+    // Reads ?search= from the URL on load so links like
+    // /find-job?search=react+developer (including Google's sitelinks
+    // search box, wired via the WebSite/SearchAction schema in
+    // PublicLayout) land on a pre-filled, relevant results page.
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const urlSearch = searchParams.get("search");
+        if (urlSearch) setSearchTerm(urlSearch);
+    }, [searchParams]);
 
     /* ================= UI STATE ================= */
 
@@ -149,6 +163,12 @@ const FindJob = () => {
 
     return (
         <main className="min-h-screen bg-[#f7f8fc] text-slate-900 transition-colors dark:bg-[#080b14] dark:text-white">
+
+            <Seo
+                title="Find a job"
+                description="Search thousands of jobs by title, skill, or location. Filter by employment type and apply directly to verified listings."
+                path="/find-job"
+            />
 
             {/* ================= TOAST ================= */}
 
@@ -543,7 +563,7 @@ const FindJob = () => {
                                         }}
                                         isSaving={saving}
                                         jobType={job?.jobType}
-                                        logo={job?.companyLogo}
+                                        companyLogo={job?.companyLogo}
                                         uploadedByRole={job?.uploadedByRole}
                                     />
                                 ))}

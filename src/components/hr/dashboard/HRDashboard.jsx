@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import Seo from "../../common/Seo";
 import {
   BriefcaseBusiness,
   Users,

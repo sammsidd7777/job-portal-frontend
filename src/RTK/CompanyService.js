@@ -55,6 +55,12 @@ export const CompanyService = createApi({
       query: () => "company/hrCompany",
     }),
 
+    // 🟣 GET SINGLE COMPANY (public detail page)
+    getCompanyById: builder.query({
+      query: (id) => `company/${id}`,
+      providesTags: (result, error, id) => [{ type: "company", id }],
+    }),
+
 
     applyJob: builder.mutation({
       query: ({ jobId, data }) => ({
@@ -81,6 +87,7 @@ export const {
   useGetAllcompanyQuery,
   useApplyJobMutation,
   useUpdateCompanyMutation,
-  useGethrCompanyQuery
+  useGethrCompanyQuery,
+  useGetCompanyByIdQuery,
 
 } = CompanyService;

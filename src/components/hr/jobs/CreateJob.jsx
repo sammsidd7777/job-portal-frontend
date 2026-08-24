@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import Seo from "../../common/Seo";
 import {
   BriefcaseBusiness,
   MapPin,
@@ -96,6 +97,7 @@ const CreateJob = () => {
 
   return (
     <>
+      <Seo title="Post a job" noindex />
       <NotificationToasty
         message={toastMessage}
         type={toastType}
