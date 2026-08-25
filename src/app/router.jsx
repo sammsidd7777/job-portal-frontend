@@ -1,36 +1,19 @@
 import { lazy, Suspense } from "react";
 import Loader from "../helper/Loader ";
 import { createBrowserRouter } from "react-router-dom";
+import JobDetailPage from "../components/jobs/JobDetailPage";
 
-const CandidateLayout = lazy(() => import("../layouts/CandidateLayout"));
 const PublicLayout = lazy(() => import("../layouts/PublicLayout"));
-const HRLayout = lazy(() => import("../layouts/HRLayout"));
 
 const Home = lazy(() => import("../pages/public/Home"));
 const BrowseCompanies = lazy(() => import("../pages/public/BrowseCompanies"));
 const FindJob = lazy(() => import("../pages/public/FindJob"));
-const JobDetails = lazy(() => import("../pages/public/JobDetails"));
 const CompanyDetails = lazy(() => import("../pages/public/CompanyDetails"));
 const PrivacyPolicy = lazy(() => import("../pages/public/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("../pages/public/TermsOfService"));
 const NotFound = lazy(() => import("../components/common/NotFound"));
 
-const Dashboard = lazy(() => import("../pages/candidate/Dashboard"));
-const Applications = lazy(() => import("../pages/candidate/Applications"));
-const Notification = lazy(() => import("../pages/candidate/Notification"));
-const Profile = lazy(() => import("../pages/candidate/Profile"));
-const Resume = lazy(() => import("../pages/candidate/Resume"));
-const Savejob = lazy(() => import("../pages/candidate/SavedJobs"))
 
-const HRDashboard = lazy(() => import("../components/hr/dashboard/HRDashboard"));
-const CreateJob = lazy(() => import("../components/hr/jobs/CreateJob"));
-const CompanyProfile = lazy(() => import("../components/hr/company/CompanyProfile"));
-const ApplicantDetails = lazy(() => import("../components/hr/applicants/ApplicantDetails"));
-const Settings = lazy(() => import("../components/hr/settings/Settings"));
-const Messages = lazy(() => import("../components/hr/messages/Messages"));
-const ManageJobs = lazy(() => import("../components/hr/jobs/ManageJobs"));
-const EditJob = lazy(() => import("../components/hr/jobs/EditJob"));
-const UnderConstruction = lazy(() => import("../components/common/UnderConstruction"))
 
 
 // Helper Function
@@ -55,7 +38,7 @@ const router = createBrowserRouter([
       },
       {
         path: "jobs/:id",
-        element: Loadable(JobDetails),
+        element: Loadable(JobDetailPage),
       },
       {
         path: "companies",
@@ -81,81 +64,81 @@ const router = createBrowserRouter([
   },
 
 {
-  path: "/hr",
-  element: Loadable(HRLayout),
+  // path: "/hr",
+  // element: Loadable(HRLayout),
 
-  children: [
-    {
-      index: true,
-      element: Loadable(HRDashboard),
-    },
-    {
-      path: "dashboard",
-      element: Loadable(HRDashboard),
-    },
-    {
-      path: "add-job",
-      element: Loadable(CreateJob),
-    },
-    {
-      path: "manage-jobs",
-      element: Loadable(ManageJobs),
-    },
-    {
-      path: "applicants",
-      element: Loadable(ApplicantDetails),
-    },
-    {
-      path: "company",
-      element: Loadable(CompanyProfile),
-    },
-    {
-      path: "settings",
-      element: Loadable(Settings),
-    },
-    {
-      path: "messages",
-      element: Loadable(Messages),
-    },
+  // children: [
+  //   {
+  //     index: true,
+  //     element: Loadable(HRDashboard),
+  //   },
+  //   {
+  //     path: "dashboard",
+  //     element: Loadable(HRDashboard),
+  //   },
+  //   {
+  //     path: "add-job",
+  //     element: Loadable(CreateJob),
+  //   },
+  //   {
+  //     path: "manage-jobs",
+  //     element: Loadable(ManageJobs),
+  //   },
+  //   {
+  //     path: "applicants",
+  //     element: Loadable(ApplicantDetails),
+  //   },
+  //   {
+  //     path: "company",
+  //     element: Loadable(CompanyProfile),
+  //   },
+  //   {
+  //     path: "settings",
+  //     element: Loadable(Settings),
+  //   },
+  //   {
+  //     path: "messages",
+  //     element: Loadable(Messages),
+  //   },
 
-    // Candidate/Application Detail
-    {
-      path: "candidates/:candidateId/:applicationId",
-      element: Loadable(ApplicantDetails),
-    },
-  ],
+  //   // Candidate/Application Detail
+  //   {
+  //     path: "candidates/:candidateId/:applicationId",
+  //     element: Loadable(ApplicantDetails),
+  //   },
+  // ],
 },
 
-  {
-    path: "/candidate",
-    element: Loadable(CandidateLayout),
-    children: [
-      {
-        index: true,
-        element: Loadable(Dashboard),
-      },
-      {
-        path: "dashboard",
-        element: Loadable(Dashboard),
-      },
-      {
-        path: "applications",
-        element: Loadable(Applications),
-      },
-      {
-        path: "saved-jobs",
-        element: Loadable(Savejob)
-      },
-      {
-        path: "profile",
-        element: Loadable(Profile)
-      },
-      {
-        path: "*",
-        element: Loadable(UnderConstruction)
-      }
-    ],
-  },
+  // {
+  //   path: "/candidate",
+  //   element: Loadable(CandidateLayout),
+  //   children: [
+  //     {
+  //       index: true,
+  //       element: Loadable(Dashboard),
+  //     },
+  //     {
+  //       path: "dashboard",
+  //       element: Loadable(Dashboard),
+  //     },
+  //     {
+  //       path: "applications",
+  //       element: Loadable(Applications),
+  //     },
+  //     {
+  //       path: "saved-jobs",
+  //       element: Loadable(Savejob)
+  //     },
+  //     {
+  //       path: "profile",
+  //       element: Loadable(Profile)
+  //     },
+  //     {
+  //       path: "*",
+  //       element: Loadable(UnderConstruction)
+  //     }
+  //   ],
+  // },
 ]);
 
 export default router;

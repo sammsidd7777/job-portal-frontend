@@ -1,33 +1,50 @@
-import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
+
+// =====================================================
+// FUTURE AUTH IMPORTS
+// Keep these commented for now
+// =====================================================
+
+// import { useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+
+// import { IoMdLogIn } from "react-icons/io";
+// import { FaRegUserCircle, FaChevronDown } from "react-icons/fa";
+
+// import {
+//   Bookmark,
+//   User,
+//   LogIn,
+//   LogOut,
+//   LayoutDashboard,
+// } from "lucide-react";
+
+// import AuthPage from "../Auth/AuthPage";
+
+// import { logout } from "../../redux/authSlice";
+// import { useLogoutUserMutation } from "../../RTK/AuthService";
+
+// =====================================================
+// ACTIVE IMPORTS
+// =====================================================
 
 import navLogo from "../../../public/favicon.png";
 
-// React Icons
-import { IoMdLogIn } from "react-icons/io";
-import { FaRegUserCircle, FaChevronDown } from "react-icons/fa";
-
-// Lucide Icons
 import {
   Home,
   BriefcaseBusiness,
   Building2,
-  Bookmark,
-  User,
-  LogIn,
-  LogOut,
-  LayoutDashboard,
 } from "lucide-react";
 
-// Components
-import AuthPage from "../Auth/AuthPage";
-
-// Redux / API
-import { logout } from "../../redux/authSlice";
-import { useLogoutUserMutation } from "../../RTK/AuthService";
-
 const Header = () => {
+
+  // =====================================================
+  // FUTURE AUTH STATE
+  // Uncomment when Login / Candidate system is enabled
+  // =====================================================
+
+  /*
   const [isLoginCard, setIsLoginCard] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -36,12 +53,15 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [logoutUser, { isLoading }] = useLogoutUserMutation();
+  const [logoutUser, { isLoading }] =
+    useLogoutUserMutation();
+  */
 
   // =====================================================
-  // LOGOUT
+  // FUTURE LOGOUT
   // =====================================================
 
+  /*
   const handleLogout = async () => {
     try {
       dispatch(logout());
@@ -55,6 +75,7 @@ const Header = () => {
       console.error("Logout failed:", error);
     }
   };
+  */
 
   // =====================================================
   // DESKTOP NAVIGATION
@@ -74,59 +95,46 @@ const Header = () => {
   ];
 
   // =====================================================
-  // MOBILE + TABLET BOTTOM NAVIGATION
+  // MOBILE NAVIGATION
+  // PUBLIC VERSION
   // =====================================================
 
-  const mobileNavLinks = user
-    ? [
-        {
-          name: "Home",
-          path: "/",
-          icon: Home,
-        },
-        {
-          name: "Jobs",
-          path: "/find-job",
-          icon: BriefcaseBusiness,
-        },
-        {
-          name: "Companies",
-          path: "/companies",
-          icon: Building2,
-        },
-        {
-          name: "Saved",
-          path: "/saved-jobs",
-          icon: Bookmark,
-        },
-        {
-          name: "Profile",
-          path: "/candidate",
-          icon: User,
-        },
-      ]
-    : [
-        {
-          name: "Home",
-          path: "/",
-          icon: Home,
-        },
-        {
-          name: "Jobs",
-          path: "/find-job",
-          icon: BriefcaseBusiness,
-        },
-        {
-          name: "Companies",
-          path: "/companies",
-          icon: Building2,
-        },
-        {
-          name: "Login",
-          path: "#login",
-          icon: LogIn,
-        },
-      ];
+  const mobileNavLinks = [
+    {
+      name: "Home",
+      path: "/",
+      icon: Home,
+    },
+    {
+      name: "Jobs",
+      path: "/find-job",
+      icon: BriefcaseBusiness,
+    },
+    {
+      name: "Companies",
+      path: "/companies",
+      icon: Building2,
+    },
+
+    /*
+    // ===================================================
+    // FUTURE USER NAVIGATION
+    // ===================================================
+
+    {
+      name: "Saved",
+      path: "/saved-jobs",
+      icon: Bookmark,
+    },
+
+    {
+      name: "Profile",
+      path: "/candidate",
+      icon: User,
+    },
+
+    */
+  ];
 
   return (
     <>
@@ -134,11 +142,7 @@ const Header = () => {
           FIXED TOP HEADER
       ====================================================== */}
 
-     <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/90 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/90">
-
-        {/* =====================================================
-            NAVBAR
-        ====================================================== */}
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/90 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/90">
 
         <nav className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:h-[76px] lg:px-8">
 
@@ -150,9 +154,8 @@ const Header = () => {
             to="/"
             className="group flex items-center gap-3"
           >
-            {/* Logo Image */}
 
-            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg shadow-blue-500/10 transition duration-300 group-hover:scale-105 dark:border-slate-700 dark:bg-slate-900 sm:h-11 sm:w-11 lg:h-12 lg:w-12">
+            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg shadow-blue-500/10 transition duration-300 group-hover:scale-105 group-hover:shadow-blue-500/20 dark:border-slate-700 dark:bg-slate-900 sm:h-11 sm:w-11 lg:h-12 lg:w-12">
 
               <img
                 src={navLogo}
@@ -161,8 +164,6 @@ const Header = () => {
               />
 
             </div>
-
-            {/* Logo Text */}
 
             <div className="hidden sm:block">
 
@@ -185,16 +186,17 @@ const Header = () => {
               </p>
 
             </div>
+
           </Link>
 
           {/* =====================================================
               DESKTOP NAVIGATION
-              ONLY 1024px+
           ====================================================== */}
 
           <div className="hidden items-center gap-10 lg:flex">
 
             {navLinks.map((item) => {
+
               const Icon = item.icon;
 
               return (
@@ -230,31 +232,57 @@ const Header = () => {
                     }
                   `}
                 >
-                  {Icon && (
-                    <Icon
-                      size={17}
-                      className="transition-transform duration-300 group-hover:-translate-y-0.5"
-                    />
-                  )}
+
+                  <Icon
+                    size={17}
+                    className="transition-transform duration-300 group-hover:-translate-y-0.5"
+                  />
 
                   {item.name}
+
                 </NavLink>
               );
+
             })}
 
           </div>
 
           {/* =====================================================
-              DESKTOP ACTIONS
+              DESKTOP RIGHT SIDE
+              PUBLIC TEMPORARY UI
           ====================================================== */}
+
+          <div className="hidden items-center lg:flex">
+
+            <div className="group flex cursor-default items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/10 dark:border-blue-900/50 dark:bg-blue-950/30">
+
+              <span className="relative flex h-2.5 w-2.5">
+
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-75" />
+
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+
+              </span>
+
+              <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
+
+                More features coming soon
+
+              </span>
+
+            </div>
+
+          </div>
+
+          {/* =====================================================
+              FUTURE LOGIN / PROFILE AREA
+              =====================================================
 
           <div className="hidden items-center gap-3 lg:flex">
 
             {user ? (
 
               <div className="relative">
-
-                {/* Profile Button */}
 
                 <button
                   onClick={() =>
@@ -263,15 +291,11 @@ const Header = () => {
                   className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition-all duration-300 hover:border-blue-400 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900"
                 >
 
-                  {/* Avatar */}
-
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white">
 
                     <FaRegUserCircle size={18} />
 
                   </div>
-
-                  {/* User Info */}
 
                   <div className="hidden text-left xl:block">
 
@@ -289,8 +313,6 @@ const Header = () => {
 
                   </div>
 
-                  {/* Arrow */}
-
                   <FaChevronDown
                     size={11}
                     className={`text-slate-400 transition-transform duration-300 ${
@@ -302,15 +324,9 @@ const Header = () => {
 
                 </button>
 
-                {/* =====================================================
-                    PROFILE DROPDOWN
-                ====================================================== */}
-
                 {isProfileOpen && (
 
                   <div className="absolute right-0 top-14 w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl dark:border-slate-700 dark:bg-slate-900">
-
-                    {/* User Information */}
 
                     <div className="border-b border-slate-100 px-3 py-3 dark:border-slate-800">
 
@@ -328,8 +344,6 @@ const Header = () => {
 
                     </div>
 
-                    {/* Candidate Dashboard */}
-
                     <Link
                       to="/candidate"
                       onClick={() =>
@@ -343,8 +357,6 @@ const Header = () => {
                       Candidate Dashboard
 
                     </Link>
-
-                    {/* Logout */}
 
                     <button
                       onClick={handleLogout}
@@ -368,8 +380,6 @@ const Header = () => {
 
             ) : (
 
-              /* LOGIN BUTTON */
-
               <button
                 onClick={() =>
                   setIsLoginCard(true)
@@ -388,76 +398,32 @@ const Header = () => {
 
             )}
 
-
-
           </div>
 
-        
+          */}
 
         </nav>
 
       </header>
 
       {/* =====================================================
-          MOBILE + TABLET FIXED BOTTOM NAVIGATION
-          < 1024px
+          MOBILE + TABLET BOTTOM NAVIGATION
       ====================================================== */}
 
       <nav className="fixed bottom-0 left-0 right-0 z-[100] border-t border-slate-200/80 bg-white/95 shadow-[0_-5px_20px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/95 lg:hidden">
 
-        <div
-          className={`mx-auto grid h-[68px] max-w-lg ${
-            user
-              ? "grid-cols-5"
-              : "grid-cols-4"
-          }`}
-        >
+        <div className="mx-auto grid h-[68px] max-w-lg grid-cols-3">
 
           {mobileNavLinks.map((item) => {
 
             const Icon = item.icon;
-
-            {/* =================================================
-                LOGIN BUTTON
-            ================================================== */}
-
-            if (item.name === "Login") {
-
-              return (
-                <button
-                  key={item.name}
-                  onClick={() =>
-                    setIsLoginCard(true)
-                  }
-                  className="flex flex-col items-center justify-center gap-1 text-slate-500 transition active:scale-95 dark:text-slate-400"
-                >
-
-                  <div className="flex h-7 w-10 items-center justify-center">
-
-                    <Icon size={21} />
-
-                  </div>
-
-                  <span className="text-[10px] font-semibold">
-
-                    Login
-
-                  </span>
-
-                </button>
-              );
-            }
-
-            {/* =================================================
-                NORMAL NAVIGATION
-            ================================================== */}
 
             return (
               <NavLink
                 key={item.name}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex flex-col items-center justify-center gap-1 transition active:scale-95 ${
+                  `flex flex-col items-center justify-center gap-1 transition-all duration-300 active:scale-95 ${
                     isActive
                       ? "text-blue-600 dark:text-blue-400"
                       : "text-slate-500 dark:text-slate-400"
@@ -466,31 +432,27 @@ const Header = () => {
               >
 
                 {({ isActive }) => (
-
                   <>
 
-                    {/* Icon Background */}
-
                     <div
-                      className={`flex h-7 w-10 items-center justify-center rounded-xl transition ${
-                        isActive
-                          ? "bg-blue-50 dark:bg-blue-950/40"
-                          : ""
-                      }`}
+                      className={`
+                        flex h-8 w-11 items-center justify-center
+                        rounded-xl
+                        transition-all duration-300
+                        ${
+                          isActive
+                            ? "bg-blue-50 shadow-sm shadow-blue-500/10 dark:bg-blue-950/40"
+                            : ""
+                        }
+                      `}
                     >
 
                       <Icon
                         size={21}
-                        strokeWidth={
-                          isActive
-                            ? 2.5
-                            : 2
-                        }
+                        strokeWidth={isActive ? 2.5 : 2}
                       />
 
                     </div>
-
-                    {/* Label */}
 
                     <span className="text-[10px] font-semibold">
 
@@ -499,11 +461,11 @@ const Header = () => {
                     </span>
 
                   </>
-
                 )}
 
               </NavLink>
             );
+
           })}
 
         </div>
@@ -511,9 +473,11 @@ const Header = () => {
       </nav>
 
       {/* =====================================================
-          AUTH MODAL
+          FUTURE AUTH MODAL
       ====================================================== */}
 
+      {/*
+      
       {isLoginCard && (
 
         <div
@@ -541,6 +505,8 @@ const Header = () => {
         </div>
 
       )}
+
+      */}
 
     </>
   );

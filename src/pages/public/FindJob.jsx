@@ -1,105 +1,258 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+
 import {
     Search,
     MapPin,
-    Bookmark,
-    BookmarkCheck,
     SlidersHorizontal,
     BriefcaseBusiness,
-    Clock3,
     X,
     RotateCcw,
+    ServerOff,
 } from "lucide-react";
 
-import { useGetFilteredJobsQuery } from "../../RTK/AuthService";
 import {
     useSavedJobMutation,
     useGetSavedJobsQuery,
 } from "../../RTK/savedJobsApi";
 
 import { staticJobs } from "../../Data/staticJobs";
+
 import NotificationToasty from "../../components/common/NotificationToasty";
 import ApplyJobForm from "../../components/forms/hr/ApplyJobForm";
 import JobCard from "../../components/jobs/JobCard";
 import Seo from "../../components/common/Seo";
 
+import { useGetAllforJobsQuery } from "../../RTK/HrService";
+import AdSlot from "../../components/common/AdSlot";
+
 const FindJob = () => {
-    /* ================= SEARCH STATE ================= */
+    /* =====================================================
+       SEARCH STATE
+    ===================================================== */
 
     const [searchTerm, setSearchTerm] = useState("");
     const [location, setLocation] = useState("");
     const [employmentType, setEmploymentType] = useState("");
     const [skills, setSkills] = useState("");
 
-    /* ================= URL SEARCH PARAM SYNC ================= */
-    // Reads ?search= from the URL on load so links like
-    // /find-job?search=react+developer (including Google's sitelinks
-    // search box, wired via the WebSite/SearchAction schema in
-    // PublicLayout) land on a pre-filled, relevant results page.
+    /* =====================================================
+       URL SEARCH PARAM
+    ===================================================== */
+
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const urlSearch = searchParams.get("search");
-        if (urlSearch) setSearchTerm(urlSearch);
+
+        if (urlSearch) {
+            setSearchTerm(urlSearch);
+        }
     }, [searchParams]);
 
-    /* ================= UI STATE ================= */
+    /* =====================================================
+       UI STATE
+    ===================================================== */
 
     const [isApply, setIsApply] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState(null);
     const [message, setMessage] = useState("");
     const [showFilters, setShowFilters] = useState(false);
 
-    /* ================= API ================= */
+    /* =====================================================
+       SAVED JOB API
+    ===================================================== */
 
-    const [saveJob, { isLoading: saving }] = useSavedJobMutation();
+    const [saveJob, { isLoading: saving }] =
+        useSavedJobMutation();
 
-    const { data: savedData } = useGetSavedJobsQuery();
+    const { data: savedData } =
+        useGetSavedJobsQuery();
+
+    /* =====================================================
+       ALL JOBS API
+
+       Default:
+       → Get ALL jobs from backend
+    ===================================================== */
 
     const {
-        data: apiJobs,
+        data: allJob,
         isLoading,
         isError,
-    } = useGetFilteredJobsQuery({
-        search: searchTerm,
-        location,
-        employmentType,
-        skill: skills,
-    });
+    } = useGetAllforJobsQuery();
 
-    /* ================= SAVED JOB IDS ================= */
+    /* =====================================================
+       BACKEND JOBS
+    ===================================================== */
+
+    const backendJobs = useMemo(() => {
+        if (Array.isArray(allJob)) {
+            return allJob;
+        }
+
+        if (Array.isArray(allJob?.jobs)) {
+            return allJob.jobs;
+        }
+
+        if (Array.isArray(allJob?.data)) {
+            return allJob.data;
+        }
+
+        return [];
+    }, [allJob]);
+
+    /* =====================================================
+       SAVED JOB IDS
+    ===================================================== */
 
     const savedJobIds =
         savedData?.savedJobs?.map((job) => job._id) || [];
 
-    /* ================= FILTER STATIC JOBS ================= */
+    /* =====================================================
+       FILTER BACKEND JOBS
+    ===================================================== */
 
-    const filteredStaticJobs = useMemo(() => {
-        return staticJobs.filter((job) => {
-            const search = searchTerm.toLowerCase().trim();
-            const selectedLocation = location.toLowerCase().trim();
-            const selectedSkill = skills.toLowerCase().trim();
+    const filteredBackendJobs = useMemo(() => {
+        const search = searchTerm.toLowerCase().trim();
+
+        const selectedLocation =
+            location.toLowerCase().trim();
+
+        const selectedSkill =
+            skills.toLowerCase().trim();
+
+        return backendJobs.filter((job) => {
+            /* ================= SEARCH ================= */
 
             const matchesSearch =
                 !search ||
-                job.title.toLowerCase().includes(search) ||
-                job.company?.name?.toLowerCase().includes(search) ||
-                job.description?.toLowerCase().includes(search);
+                job.title
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.description
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.company?.companyName
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.companyName
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.skills?.some((skill) =>
+                    skill
+                        ?.toLowerCase()
+                        .includes(search)
+                );
+
+            /* ================= LOCATION ================= */
 
             const matchesLocation =
                 !selectedLocation ||
-                job.location.toLowerCase().includes(selectedLocation);
+                job.location
+                    ?.toLowerCase()
+                    .includes(selectedLocation);
+
+            /* ================= EMPLOYMENT ================= */
 
             const matchesEmployment =
                 !employmentType ||
                 job.employmentType === employmentType;
 
+            /* ================= SKILLS ================= */
+
             const matchesSkill =
                 !selectedSkill ||
                 job.skills?.some((skill) =>
-                    skill.toLowerCase().includes(selectedSkill)
+                    skill
+                        ?.toLowerCase()
+                        .includes(selectedSkill)
+                );
+
+            return (
+                matchesSearch &&
+                matchesLocation &&
+                matchesEmployment &&
+                matchesSkill
+            );
+        });
+    }, [
+        backendJobs,
+        searchTerm,
+        location,
+        employmentType,
+        skills,
+    ]);
+
+    /* =====================================================
+       FILTER STATIC JOBS
+
+       ONLY USED WHEN BACKEND IS DOWN
+    ===================================================== */
+
+    const filteredStaticJobs = useMemo(() => {
+        return staticJobs.filter((job) => {
+            const search =
+                searchTerm.toLowerCase().trim();
+
+            const selectedLocation =
+                location.toLowerCase().trim();
+
+            const selectedSkill =
+                skills.toLowerCase().trim();
+
+            /* ================= SEARCH ================= */
+
+            const matchesSearch =
+                !search ||
+                job.title
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.company?.name
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.companyName
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.description
+                    ?.toLowerCase()
+                    .includes(search) ||
+
+                job.skills?.some((skill) =>
+                    skill
+                        ?.toLowerCase()
+                        .includes(search)
+                );
+
+            /* ================= LOCATION ================= */
+
+            const matchesLocation =
+                !selectedLocation ||
+                job.location
+                    ?.toLowerCase()
+                    .includes(selectedLocation);
+
+            /* ================= EMPLOYMENT ================= */
+
+            const matchesEmployment =
+                !employmentType ||
+                job.employmentType === employmentType;
+
+            /* ================= SKILLS ================= */
+
+            const matchesSkill =
+                !selectedSkill ||
+                job.skills?.some((skill) =>
+                    skill
+                        ?.toLowerCase()
+                        .includes(selectedSkill)
                 );
 
             return (
@@ -116,14 +269,23 @@ const FindJob = () => {
         skills,
     ]);
 
-    /* ================= FINAL JOB DATA ================= */
+    /* =====================================================
+       FINAL JOB DATA
 
-    const jobsData =
-        !isError && apiJobs?.length > 0
-            ? apiJobs
-            : filteredStaticJobs;
+       Backend working:
+       → Backend jobs
 
-    /* ================= SAVE JOB ================= */
+       Backend down:
+       → Static jobs
+    ===================================================== */
+
+    const jobsData = isError
+        ? filteredStaticJobs
+        : filteredBackendJobs;
+
+    /* =====================================================
+       SAVE JOB
+    ===================================================== */
 
     const handleSaveJob = async (id) => {
         try {
@@ -140,7 +302,9 @@ const FindJob = () => {
         }
     };
 
-    /* ================= CLEAR FILTERS ================= */
+    /* =====================================================
+       CLEAR FILTERS
+    ===================================================== */
 
     const clearFilters = () => {
         setSearchTerm("");
@@ -149,7 +313,9 @@ const FindJob = () => {
         setSkills("");
     };
 
-    /* ================= AUTO HIDE TOAST ================= */
+    /* =====================================================
+       AUTO HIDE TOAST
+    ===================================================== */
 
     useEffect(() => {
         if (!message) return;
@@ -161,8 +327,16 @@ const FindJob = () => {
         return () => clearTimeout(timer);
     }, [message]);
 
+    /* =====================================================
+       UI
+    ===================================================== */
+
     return (
         <main className="min-h-screen bg-[#f7f8fc] text-slate-900 transition-colors dark:bg-[#080b14] dark:text-white">
+
+            {/* =================================================
+                SEO
+            ================================================= */}
 
             <Seo
                 title="Find a job"
@@ -170,13 +344,19 @@ const FindJob = () => {
                 path="/find-job"
             />
 
-            {/* ================= TOAST ================= */}
+            {/* =================================================
+                TOAST
+            ================================================= */}
 
             {message && (
-                <NotificationToasty message={message} />
+                <NotificationToasty
+                    message={message}
+                />
             )}
 
-            {/* ================= HERO SEARCH ================= */}
+            {/* =================================================
+                HERO SEARCH
+            ================================================= */}
 
             <section className="relative overflow-hidden border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-[#0d111c]">
 
@@ -203,6 +383,7 @@ const FindJob = () => {
                         <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
 
                             Find your next
+
                             <span className="block bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
 
                                 great opportunity.
@@ -213,13 +394,16 @@ const FindJob = () => {
 
                         <p className="mt-5 max-w-xl text-base leading-7 text-slate-500 dark:text-slate-400 sm:text-lg">
 
-                            Discover jobs that match your skills, goals, and career ambitions.
+                            Discover jobs that match your skills,
+                            goals, and career ambitions.
 
                         </p>
 
                     </div>
 
-                    {/* Search Box */}
+                    {/* =================================================
+                        SEARCH BOX
+                    ================================================= */}
 
                     <div className="rounded-3xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 sm:p-4">
 
@@ -238,7 +422,9 @@ const FindJob = () => {
                                     type="text"
                                     value={searchTerm}
                                     onChange={(e) =>
-                                        setSearchTerm(e.target.value)
+                                        setSearchTerm(
+                                            e.target.value
+                                        )
                                     }
                                     placeholder="Job title, skill, or company"
                                     className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 dark:text-white"
@@ -259,7 +445,9 @@ const FindJob = () => {
                                     type="text"
                                     value={location}
                                     onChange={(e) =>
-                                        setLocation(e.target.value)
+                                        setLocation(
+                                            e.target.value
+                                        )
                                     }
                                     placeholder="City, state, or remote"
                                     className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 dark:text-white"
@@ -287,9 +475,7 @@ const FindJob = () => {
                         <div className="mt-5 flex flex-wrap items-center gap-2">
 
                             <span className="mr-2 text-sm text-slate-400">
-
                                 Popular:
-
                             </span>
 
                             {[
@@ -306,9 +492,7 @@ const FindJob = () => {
                                     }
                                     className="rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-950/30"
                                 >
-
                                     {item}
-
                                 </button>
 
                             ))}
@@ -321,11 +505,60 @@ const FindJob = () => {
 
             </section>
 
-            {/* ================= MAIN CONTENT ================= */}
+            {/* =================================================
+                TOP ADSENSE
+            ================================================= */}
+
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+                <AdSlot
+                    slot="YOUR_AD_SLOT_ID"
+                    format="auto"
+                    className="my-8 min-h-[100px]"
+                />
+
+            </div>
+
+            {/* =================================================
+                MAIN CONTENT
+            ================================================= */}
 
             <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
 
-                {/* Mobile Filter Button */}
+                {/* =================================================
+                    SERVER DOWN MESSAGE
+                ================================================= */}
+
+                {isError && (
+
+                    <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400">
+
+                        <ServerOff
+                            size={20}
+                            className="mt-0.5 shrink-0"
+                        />
+
+                        <div>
+
+                            <p className="font-semibold">
+                                Server is currently unavailable
+                            </p>
+
+                            <p className="mt-1 text-sm opacity-80">
+                                We are showing sample job
+                                opportunities while the server
+                                is down.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                )}
+
+                {/* =================================================
+                    MOBILE FILTER BUTTON
+                ================================================= */}
 
                 <button
                     onClick={() =>
@@ -342,14 +575,19 @@ const FindJob = () => {
 
                 <div className="grid gap-8 lg:grid-cols-[250px_1fr]">
 
-                    {/* ================= FILTER SIDEBAR ================= */}
+                    {/* =================================================
+                        FILTER SIDEBAR
+                    ================================================= */}
 
                     <aside
-                        className={`h-fit rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 ${showFilters
-                            ? "block"
-                            : "hidden lg:block"
-                            }`}
+                        className={`h-fit rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 ${
+                            showFilters
+                                ? "block"
+                                : "hidden lg:block"
+                        }`}
                     >
+
+                        {/* Filter Header */}
 
                         <div className="mb-6 flex items-center justify-between">
 
@@ -361,9 +599,7 @@ const FindJob = () => {
                                 />
 
                                 <h2 className="font-bold">
-
                                     Filters
-
                                 </h2>
 
                             </div>
@@ -372,21 +608,17 @@ const FindJob = () => {
                                 onClick={clearFilters}
                                 className="text-xs font-semibold text-blue-600 hover:underline"
                             >
-
                                 Clear all
-
                             </button>
 
                         </div>
 
-                        {/* Job Type */}
+                        {/* Employment Type */}
 
                         <div className="border-b border-slate-200 pb-6 dark:border-slate-800">
 
                             <h3 className="mb-4 font-semibold">
-
                                 Employment type
-
                             </h3>
 
                             <div className="space-y-3">
@@ -433,9 +665,7 @@ const FindJob = () => {
                         <div className="pt-6">
 
                             <h3 className="mb-3 font-semibold">
-
                                 Skills
-
                             </h3>
 
                             <input
@@ -450,9 +680,25 @@ const FindJob = () => {
 
                         </div>
 
+                        {/* =================================================
+                            SIDEBAR ADSENSE
+                        ================================================= */}
+
+                        <div className="mt-8 border-t border-slate-200 pt-4 dark:border-slate-800">
+
+                            <AdSlot
+                                slot="YOUR_AD_SLOT_ID"
+                                format="auto"
+                                className="min-h-[100px]"
+                            />
+
+                        </div>
+
                     </aside>
 
-                    {/* ================= JOB RESULTS ================= */}
+                    {/* =================================================
+                        RESULTS
+                    ================================================= */}
 
                     <div>
 
@@ -467,22 +713,10 @@ const FindJob = () => {
                                     {jobsData.length}
 
                                     <span className="ml-2 text-slate-500 dark:text-slate-400">
-
                                         jobs found
-
                                     </span>
 
                                 </h2>
-
-                                {isError && (
-
-                                    <p className="mt-1 text-xs text-amber-600">
-
-                                        Showing available opportunities
-
-                                    </p>
-
-                                )}
 
                             </div>
 
@@ -499,9 +733,11 @@ const FindJob = () => {
 
                         </div>
 
-                        {/* Loading */}
+                        {/* =================================================
+                            LOADING
+                        ================================================= */}
 
-                        {isLoading && !apiJobs ? (
+                        {isLoading ? (
 
                             <div className="grid gap-5 md:grid-cols-2">
 
@@ -518,6 +754,10 @@ const FindJob = () => {
 
                         ) : jobsData.length === 0 ? (
 
+                            /* =================================================
+                                NO JOBS
+                            ================================================= */
+
                             <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-16 text-center dark:border-slate-700 dark:bg-slate-900">
 
                                 <BriefcaseBusiness
@@ -526,47 +766,99 @@ const FindJob = () => {
                                 />
 
                                 <h3 className="text-xl font-bold">
-
                                     No jobs found
-
                                 </h3>
 
                                 <p className="mt-2 text-slate-500">
-
                                     Try changing your search filters.
-
                                 </p>
 
                                 <button
                                     onClick={clearFilters}
                                     className="mt-5 rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white"
                                 >
-
                                     Clear filters
-
                                 </button>
 
                             </div>
 
                         ) : (
 
+                            /* =================================================
+                                JOB CARDS
+                            ================================================= */
+
                             <div className="grid gap-6 sm:grid-cols-2">
-                                {jobsData.map((job) => (
-                                    <JobCard
-                                        key={job._id}
-                                        job={job}
-                                        isSaved={savedJobIds.includes(job._id)}
-                                        onSave={handleSaveJob}
-                                        onApply={(selectedJob) => {
-                                            setSelectedJobId(selectedJob._id);
-                                            setIsApply(true);
-                                        }}
-                                        isSaving={saving}
-                                        jobType={job?.jobType}
-                                        companyLogo={job?.companyLogo}
-                                        uploadedByRole={job?.uploadedByRole}
-                                    />
+
+                                {jobsData.map((job, index) => (
+
+                                    <React.Fragment key={job._id}>
+
+                                        <JobCard
+                                            job={job}
+
+                                            isSaved={savedJobIds.includes(
+                                                job._id
+                                            )}
+
+                                            onSave={handleSaveJob}
+
+                                            onApply={(selectedJob) => {
+
+                                                if (
+                                                    selectedJob?.jobType ===
+                                                        "internal" ||
+                                                    !selectedJob?.jobType
+                                                ) {
+
+                                                    setSelectedJobId(
+                                                        selectedJob._id
+                                                    );
+
+                                                    setIsApply(true);
+
+                                                }
+
+                                            }}
+
+                                            isSaving={saving}
+
+                                            jobType={
+                                                job?.jobType
+                                            }
+
+                                            companyLogo={
+                                                job?.companyLogo
+                                            }
+
+                                            uploadedByRole={
+                                                job?.uploadedByRole
+                                            }
+                                        />
+
+                                        {/* =================================================
+                                            IN-FEED ADSENSE
+                                            Every 6 jobs
+                                        ================================================= */}
+
+                                        {(index + 1) % 6 === 0 && (
+
+                                            <div className="sm:col-span-2">
+
+                                                <AdSlot
+                                                    slot="YOUR_AD_SLOT_ID"
+                                                    format="auto"
+                                                    className="min-h-[120px]"
+                                                />
+
+                                            </div>
+
+                                        )}
+
+                                    </React.Fragment>
+
                                 ))}
+
                             </div>
 
                         )}
@@ -577,7 +869,9 @@ const FindJob = () => {
 
             </section>
 
-            {/* ================= APPLY MODAL ================= */}
+            {/* =================================================
+                APPLY MODAL
+            ================================================= */}
 
             {isApply && (
 
@@ -599,15 +893,11 @@ const FindJob = () => {
                         <div className="pr-10">
 
                             <h2 className="text-2xl font-bold">
-
                                 Apply for this job
-
                             </h2>
 
                             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-
                                 Complete your application below.
-
                             </p>
 
                         </div>
@@ -632,4 +922,3 @@ const FindJob = () => {
 };
 
 export default FindJob;
-
