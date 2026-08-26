@@ -1,187 +1,302 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-Users,
-CalendarDays,
-BriefcaseBusiness,
-ArrowUpRight,
+  Users,
+  CalendarDays,
+  BriefcaseBusiness,
+  ArrowUpRight,
+  Building2,
 } from "lucide-react";
 
 const CompanyCard = ({ company }) => {
+  const [imageError, setImageError] = useState(false);
 
-return (
-<Link
-to={`/company/${company._id}`}
-className="
-group block
-bg-white dark:bg-gray-900
-border border-gray-200 dark:border-gray-800
-rounded-2xl
-p-6
-shadow-sm
-hover:shadow-xl
-hover:-translate-y-1
-transition-all duration-300
-"
->
-{/* Company Header */} <div className="flex items-center justify-between gap-4 mb-5"> <div className="flex items-center gap-4 min-w-0">
-<img
-src={company.companyLogo || company.logo || "/meta.png"}
-alt={company.companyName}
-className="
-w-16 h-16
-rounded-2xl
-object-cover
-border border-gray-200 dark:border-gray-700
-group-hover:scale-105
-transition-transform duration-300
-"
-/>
+  if (!company) return null;
 
-```
-      <div className="min-w-0">
-        <h2 className="
-          text-lg
-          font-semibold
-          text-gray-900 dark:text-white
-          truncate
-        ">
-          {company.companyName}
-        </h2>
+  const companyName =
+    company.companyName ||
+    company.name ||
+    "Company";
 
-        <p className="
-          text-sm
-          text-gray-500 dark:text-gray-400
-          mt-1
-          truncate
-        ">
-          {company.category || "Industry not provided"}
-        </p>
-      </div>
-    </div>
+  const category =
+    company.category ||
+    "Industry not provided";
 
-    {/* Arrow */}
-    <ArrowUpRight
-      size={20}
+  const description =
+    company.description ||
+    "No company description available.";
+
+  const logo =
+    company.companyLogo ||
+    company.logo ||
+    "/meta.png";
+
+  const employees =
+    company.employees ?? "N/A";
+
+  const founded =
+    company.founded ?? "N/A";
+
+  const totalJobs =
+    company.totalJobs ?? 0;
+
+  return (
+    <Link
+      to={`/company/${company._id}`}
+      aria-label={`View details for ${companyName}`}
       className="
-        shrink-0
-        text-gray-400
-        group-hover:text-blue-600
-        group-hover:translate-x-1
-        group-hover:-translate-y-1
+        group block
+        rounded-2xl
+        border border-gray-200
+        bg-white
+        p-6
+        shadow-sm
         transition-all duration-300
+        hover:-translate-y-1
+        hover:border-blue-200
+        hover:shadow-xl
+        dark:border-gray-800
+        dark:bg-gray-900
+        dark:hover:border-gray-700
       "
-    />
-  </div>
+    >
+      {/* =========================
+          COMPANY HEADER
+      ========================== */}
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-4">
 
-  {/* Description */}
-  <p className="
-    text-sm
-    leading-6
-    text-gray-600 dark:text-gray-300
-    line-clamp-2
-    min-h-[48px]
-    mb-6
-  ">
-    {company.description || "No description available."}
-  </p>
+          {/* LOGO */}
+          <div
+            className="
+              flex h-16 w-16
+              shrink-0
+              items-center justify-center
+              overflow-hidden
+              rounded-2xl
+              border border-gray-200
+              bg-gray-50
+              dark:border-gray-700
+              dark:bg-gray-800
+            "
+          >
+            {!imageError ? (
+              <img
+                src={logo}
+                alt={`${companyName} logo`}
+                onError={() => setImageError(true)}
+                className="
+                  h-full
+                  w-full
+                  object-contain
+                  p-1
+                  transition-transform
+                  duration-300
+                  group-hover:scale-105
+                "
+              />
+            ) : (
+              <Building2
+                size={28}
+                aria-hidden="true"
+                className="text-gray-400"
+              />
+            )}
+          </div>
 
-  {/* Company Stats */}
-  <div className="
-    grid grid-cols-3
-    gap-3
-    border-t
-    border-gray-100 dark:border-gray-800
-    pt-5
-  ">
-    {/* Employees */}
-    <div className="text-center">
-      <Users
-        size={18}
-        className="mx-auto mb-1 text-blue-500"
-      />
+          {/* COMPANY NAME */}
+          <div className="min-w-0">
+            <h2
+              className="
+                truncate
+                text-lg
+                font-bold
+                text-gray-900
+                dark:text-white
+              "
+            >
+              {companyName}
+            </h2>
 
-      <p className="
-        text-xs
-        text-gray-500 dark:text-gray-400
-      ">
-        Employees
+            <p
+              className="
+                mt-1
+                truncate
+                text-sm
+                text-gray-500
+                dark:text-gray-400
+              "
+            >
+              {category}
+            </p>
+          </div>
+        </div>
+
+        {/* ARROW */}
+        <ArrowUpRight
+          size={20}
+          aria-hidden="true"
+          className="
+            shrink-0
+            text-gray-400
+            transition-all duration-300
+            group-hover:-translate-y-1
+            group-hover:translate-x-1
+            group-hover:text-blue-600
+            dark:group-hover:text-blue-400
+          "
+        />
+      </div>
+
+      {/* =========================
+          DESCRIPTION
+      ========================== */}
+      <p
+        className="
+          mb-6
+          min-h-[48px]
+          line-clamp-2
+          text-sm
+          leading-6
+          text-gray-600
+          dark:text-gray-300
+        "
+      >
+        {description}
       </p>
 
-      <p className="
-        mt-1
-        text-sm
-        font-semibold
-        text-gray-900 dark:text-white
-      ">
-        {company.employees || "N/A"}
-      </p>
-    </div>
+      {/* =========================
+          COMPANY STATS
+      ========================== */}
+      <div
+        className="
+          grid grid-cols-3
+          gap-3
+          border-t
+          border-gray-100
+          pt-5
+          dark:border-gray-800
+        "
+      >
+        {/* EMPLOYEES */}
+        <div className="text-center">
+          <Users
+            size={18}
+            aria-hidden="true"
+            className="mx-auto mb-1 text-blue-500"
+          />
 
-    {/* Founded */}
-    <div className="text-center">
-      <CalendarDays
-        size={18}
-        className="mx-auto mb-1 text-purple-500"
-      />
+          <p
+            className="
+              text-xs
+              text-gray-500
+              dark:text-gray-400
+            "
+          >
+            Employees
+          </p>
 
-      <p className="
-        text-xs
-        text-gray-500 dark:text-gray-400
-      ">
-        Founded
-      </p>
+          <p
+            className="
+              mt-1
+              text-sm
+              font-semibold
+              text-gray-900
+              dark:text-white
+            "
+          >
+            {employees}
+          </p>
+        </div>
 
-      <p className="
-        mt-1
-        text-sm
-        font-semibold
-        text-gray-900 dark:text-white
-      ">
-        {company.founded || "N/A"}
-      </p>
-    </div>
+        {/* FOUNDED */}
+        <div className="text-center">
+          <CalendarDays
+            size={18}
+            aria-hidden="true"
+            className="mx-auto mb-1 text-purple-500"
+          />
 
-    {/* Jobs */}
-    <div className="text-center">
-      <BriefcaseBusiness
-        size={18}
-        className="mx-auto mb-1 text-green-500"
-      />
+          <p
+            className="
+              text-xs
+              text-gray-500
+              dark:text-gray-400
+            "
+          >
+            Founded
+          </p>
 
-      <p className="
-        text-xs
-        text-gray-500 dark:text-gray-400
-      ">
-        Open Jobs
-      </p>
+          <p
+            className="
+              mt-1
+              text-sm
+              font-semibold
+              text-gray-900
+              dark:text-white
+            "
+          >
+            {founded}
+          </p>
+        </div>
 
-      <p className="
-        mt-1
-        text-sm
-        font-semibold
-        text-blue-600 dark:text-blue-400
-      ">
-        {company.totalJobs || 0}
-      </p>
-    </div>
-  </div>
+        {/* OPEN JOBS */}
+        <div className="text-center">
+          <BriefcaseBusiness
+            size={18}
+            aria-hidden="true"
+            className="mx-auto mb-1 text-green-500"
+          />
 
-  {/* Bottom Action */}
-  <div className="
-    mt-6
-    text-sm
-    font-medium
-    text-blue-600 dark:text-blue-400
-    group-hover:translate-x-1
-    transition-transform duration-300
-  ">
-    View company details →
-  </div>
-</Link>
+          <p
+            className="
+              text-xs
+              text-gray-500
+              dark:text-gray-400
+            "
+          >
+            Open Jobs
+          </p>
 
+          <p
+            className="
+              mt-1
+              text-sm
+              font-semibold
+              text-blue-600
+              dark:text-blue-400
+            "
+          >
+            {totalJobs}
+          </p>
+        </div>
+      </div>
 
-);
+      {/* =========================
+          BOTTOM ACTION
+      ========================== */}
+      <div
+        className="
+          mt-6
+          flex items-center
+          justify-between
+          text-sm
+          font-semibold
+          text-blue-600
+          transition-transform duration-300
+          group-hover:translate-x-1
+          dark:text-blue-400
+        "
+      >
+        <span>View company details</span>
+
+        <ArrowUpRight
+          size={16}
+          aria-hidden="true"
+        />
+      </div>
+    </Link>
+  );
 };
 
 export default CompanyCard;

@@ -5,12 +5,10 @@ import {
   ArrowUpRight,
   Building2,
   BriefcaseBusiness,
-  Users,
-  CalendarDays,
   Mail,
   Phone,
   Globe,
-   MapPin,
+  MapPin,
   ExternalLink,
   ShieldCheck,
   Clock3,
@@ -23,26 +21,28 @@ import Seo from "../../components/common/Seo";
 import AdSlot from "../../components/common/AdSlot";
 import getPostedTime from "../../components/jobs/getPostedTime";
 
+/* =========================================================
+   SKELETON
+========================================================= */
+
 const CompanyDetailsSkeleton = () => (
   <div className="space-y-6 animate-pulse">
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 sm:p-8">
-      <div className="flex flex-col gap-5 sm:flex-row">
-        <div className="h-24 w-24 shrink-0 rounded-2xl bg-slate-200 dark:bg-slate-800" />
+    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+      <div className="h-32 bg-slate-200 dark:bg-slate-800 sm:h-40" />
 
-        <div className="flex-1 space-y-3">
+      <div className="px-5 pb-7 sm:px-8">
+        <div className="-mt-12">
+          <div className="h-24 w-24 rounded-2xl border-4 border-white bg-slate-200 dark:border-slate-900 dark:bg-slate-800" />
+        </div>
+
+        <div className="mt-5 space-y-3">
           <div className="h-7 w-2/3 rounded bg-slate-200 dark:bg-slate-800" />
           <div className="h-4 w-1/3 rounded bg-slate-200 dark:bg-slate-800" />
-          <div className="h-4 w-1/2 rounded bg-slate-200 dark:bg-slate-800" />
         </div>
-      </div>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-3">
-        {[1, 2, 3].map((item) => (
-          <div
-            key={item}
-            className="h-24 rounded-2xl bg-slate-100 dark:bg-slate-800"
-          />
-        ))}
+        <div className="mt-7">
+          <div className="h-24 rounded-2xl bg-slate-100 dark:bg-slate-800" />
+        </div>
       </div>
     </div>
 
@@ -50,9 +50,56 @@ const CompanyDetailsSkeleton = () => (
   </div>
 );
 
-/* =========================
+/* =========================================================
+   SAFE SALARY FORMATTER
+========================================================= */
+
+const formatSalary = (salary) => {
+  if (!salary) return "Not disclosed";
+
+  // If backend returns simple string
+  if (typeof salary === "string") {
+    return salary.trim() || "Not disclosed";
+  }
+
+  // If backend returns number
+  if (typeof salary === "number") {
+    return `₹${salary.toLocaleString("en-IN")}`;
+  }
+
+  // If backend returns object { min, max }
+  if (typeof salary === "object") {
+    const min = Number(salary?.min);
+    const max = Number(salary?.max);
+
+    const hasMin = Number.isFinite(min) && min > 0;
+    const hasMax = Number.isFinite(max) && max > 0;
+
+    if (hasMin && hasMax) {
+      if (min === max) {
+        return `₹${min.toLocaleString("en-IN")}`;
+      }
+
+      return `₹${min.toLocaleString("en-IN")} - ₹${max.toLocaleString(
+        "en-IN"
+      )}`;
+    }
+
+    if (hasMin) {
+      return `₹${min.toLocaleString("en-IN")}+`;
+    }
+
+    if (hasMax) {
+      return `Up to ₹${max.toLocaleString("en-IN")}`;
+    }
+  }
+
+  return "Not disclosed";
+};
+
+/* =========================================================
    INFO ITEM
-========================= */
+========================================================= */
 
 const InfoItem = ({
   icon: Icon,
@@ -67,7 +114,11 @@ const InfoItem = ({
         flex items-start gap-3 rounded-2xl border
         border-slate-200/80 bg-slate-50/70 p-4
         dark:border-white/[0.07] dark:bg-white/[0.03]
-        ${href ? "transition hover:border-blue-300 dark:hover:border-blue-500/30" : ""}
+        ${
+          href
+            ? "transition hover:border-blue-300 dark:hover:border-blue-500/30"
+            : ""
+        }
       `}
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500 shadow-sm dark:bg-slate-800 dark:text-slate-300">
@@ -84,7 +135,7 @@ const InfoItem = ({
             <LockKeyhole size={13} className="text-slate-400" />
 
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Private / Not provided
+              Not disclosed
             </p>
           </div>
         ) : (
@@ -101,35 +152,20 @@ const InfoItem = ({
   }
 
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+    >
       {content}
     </a>
   );
 };
 
-/* =========================
-   STAT CARD
-========================= */
-
-const StatCard = ({ icon: Icon, label, value, iconClass }) => (
-  <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-white/[0.07] dark:bg-white/[0.03]">
-    <div className={`mb-3 ${iconClass}`}>
-      <Icon size={19} />
-    </div>
-
-    <p className="text-xs text-slate-500 dark:text-slate-400">
-      {label}
-    </p>
-
-    <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">
-      {value || "N/A"}
-    </p>
-  </div>
-);
-
-/* =========================
+/* =========================================================
    MAIN COMPONENT
-========================= */
+========================================================= */
 
 const CompanyDetails = () => {
   const { id } = useParams();
@@ -150,16 +186,116 @@ const CompanyDetails = () => {
     ? company.jobs
     : [];
 
-  /* =========================
-     COMPANY VALUES
-  ========================= */
+  /* =========================================================
+     COMPANY DATA
+  ========================================================= */
 
   const companyName =
-    company?.companyName || "Company Profile";
+    company?.companyName ||
+    company?.name ||
+    "Company Profile";
+
+  const companyLogo =
+    company?.companyLogo ||
+    company?.logo ||
+    null;
 
   const description =
     company?.description ||
     "No company description has been provided yet.";
+
+  const industry =
+    company?.industry ||
+    company?.category ||
+    null;
+
+  const location =
+    company?.location ||
+    company?.address ||
+    company?.city ||
+    null;
+
+  /* =========================================================
+     CONTACT DATA
+  ========================================================= */
+
+  const companyEmail =
+    company?.email ||
+    company?.companyEmail ||
+    company?.contactEmail ||
+    null;
+
+  const companyPhone =
+    company?.phone ||
+    company?.companyPhone ||
+    company?.contactPhone ||
+    null;
+
+  const website =
+    company?.website ||
+    company?.companyWebsite ||
+    null;
+
+  const linkedin =
+    company?.linkedin ||
+    company?.linkedinUrl ||
+    null;
+
+  /* =========================================================
+     RECRUITER
+  ========================================================= */
+
+  const recruiter =
+    company?.hr ||
+    company?.recruiter ||
+    company?.recruiterDetails ||
+    company?.contactPerson ||
+    null;
+
+  const recruiterName =
+    recruiter?.name ||
+    recruiter?.fullName ||
+    null;
+
+  const recruiterEmail =
+    recruiter?.email ||
+    null;
+
+  const recruiterPhone =
+    recruiter?.phone ||
+    null;
+
+  /* =========================================================
+     URL NORMALIZER
+  ========================================================= */
+
+  const normalizeUrl = (url) => {
+    if (!url || typeof url !== "string") {
+      return null;
+    }
+
+    const cleanUrl = url.trim();
+
+    if (!cleanUrl) {
+      return null;
+    }
+
+    if (
+      cleanUrl.startsWith("http://") ||
+      cleanUrl.startsWith("https://")
+    ) {
+      return cleanUrl;
+    }
+
+    return `https://${cleanUrl}`;
+  };
+
+  const websiteUrl = normalizeUrl(website);
+  const linkedinUrl = normalizeUrl(linkedin);
+
+  /* =========================================================
+     SEO
+  ========================================================= */
 
   const pageDescription = company?.description
     ? company.description
@@ -167,78 +303,11 @@ const CompanyDetails = () => {
         .slice(0, 155)
         .trim() +
       (company.description.length > 155 ? "…" : "")
-    : `Explore company information, open jobs, career opportunities and recruiter details for ${companyName}.`;
+    : `Explore ${companyName}, open jobs, career opportunities and company information on Job Hunter.`;
 
-  /* =========================
-     OPTIONAL CONTACT DATA
-  ========================= */
-
-  const companyEmail =
-    company?.email ||
-    company?.companyEmail ||
-    company?.contactEmail;
-
-  const companyPhone =
-    company?.phone ||
-    company?.companyPhone ||
-    company?.contactPhone;
-
-  const website =
-    company?.website ||
-    company?.companyWebsite;
-
-  const linkedin =
-    company?.linkedin ||
-    company?.linkedinUrl;
-
-  const location =
-    company?.location ||
-    company?.address ||
-    company?.city;
-
-  /* =========================
-     HR / RECRUITER
-  ========================= */
-
-  const recruiter =
-    company?.hr ||
-    company?.recruiter ||
-    company?.recruiterDetails ||
-    company?.contactPerson;
-
-  const recruiterName =
-    recruiter?.name ||
-    recruiter?.fullName;
-
-  const recruiterEmail =
-    recruiter?.email;
-
-  const recruiterPhone =
-    recruiter?.phone;
-
-  /* =========================
-     URLS
-  ========================= */
-
-  const normalizeUrl = (url) => {
-    if (!url) return null;
-
-    if (
-      url.startsWith("http://") ||
-      url.startsWith("https://")
-    ) {
-      return url;
-    }
-
-    return `https://${url}`;
-  };
-
-  const websiteUrl = normalizeUrl(website);
-  const linkedinUrl = normalizeUrl(linkedin);
-
-  /* =========================
+  /* =========================================================
      ORGANIZATION SCHEMA
-  ========================= */
+  ========================================================= */
 
   const organizationSchema = company
     ? {
@@ -246,9 +315,9 @@ const CompanyDetails = () => {
         "@type": "Organization",
         name: companyName,
 
-        ...(company?.companyLogo
+        ...(companyLogo
           ? {
-              logo: company.companyLogo,
+              logo: companyLogo,
             }
           : {}),
 
@@ -258,15 +327,9 @@ const CompanyDetails = () => {
             }
           : {}),
 
-        ...(company?.industry
+        ...(industry
           ? {
-              industry: company.industry,
-            }
-          : {}),
-
-        ...(company?.founded
-          ? {
-              foundingDate: String(company.founded),
+              industry,
             }
           : {}),
 
@@ -287,9 +350,9 @@ const CompanyDetails = () => {
       }
     : null;
 
-  /* =========================
+  /* =========================================================
      LOADING
-  ========================= */
+  ========================================================= */
 
   if (isLoading) {
     return (
@@ -304,13 +367,15 @@ const CompanyDetails = () => {
   return (
     <main className="min-h-screen bg-[#f7f8fc] text-slate-900 dark:bg-[#080b14] dark:text-white">
 
-      {/* ================= SEO ================= */}
+      {/* =====================================================
+          SEO
+      ===================================================== */}
 
       <Seo
         title={`${companyName} - Company Profile & Jobs`}
         description={pageDescription}
         path={`/company/${id}`}
-        image={company?.companyLogo}
+        image={companyLogo}
       />
 
       {organizationSchema && (
@@ -321,7 +386,9 @@ const CompanyDetails = () => {
         </Helmet>
       )}
 
-      {/* ================= TOP AD ================= */}
+      {/* =====================================================
+          TOP AD
+      ===================================================== */}
 
       <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
         <AdSlot
@@ -330,7 +397,9 @@ const CompanyDetails = () => {
         />
       </div>
 
-      {/* ================= PAGE ================= */}
+      {/* =====================================================
+          PAGE
+      ===================================================== */}
 
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
@@ -340,10 +409,14 @@ const CompanyDetails = () => {
           onClick={() => navigate(-1)}
           className="
             mb-6 inline-flex items-center gap-2
+            rounded-xl px-3 py-2
             text-sm font-medium
             text-slate-500
-            transition hover:text-blue-600
+            transition
+            hover:bg-white
+            hover:text-blue-600
             dark:text-slate-400
+            dark:hover:bg-slate-900
             dark:hover:text-blue-400
           "
         >
@@ -351,10 +424,13 @@ const CompanyDetails = () => {
           Back to companies
         </button>
 
-        {/* ERROR */}
+        {/* ===================================================
+            ERROR
+        =================================================== */}
 
         {isError && (
           <div className="rounded-3xl border border-red-200 bg-white p-10 text-center dark:border-red-900/40 dark:bg-slate-900">
+
             <Building2
               size={42}
               className="mx-auto mb-4 text-slate-300"
@@ -373,10 +449,14 @@ const CompanyDetails = () => {
             <Link
               to="/companies"
               className="
-                mt-6 inline-flex rounded-xl
-                bg-slate-900 px-5 py-3
-                text-sm font-semibold text-white
-                dark:bg-white dark:text-slate-900
+                mt-6 inline-flex
+                rounded-xl
+                bg-slate-900
+                px-5 py-3
+                text-sm font-semibold
+                text-white
+                dark:bg-white
+                dark:text-slate-900
               "
             >
               Browse Companies
@@ -384,27 +464,36 @@ const CompanyDetails = () => {
           </div>
         )}
 
-        {/* ================= CONTENT ================= */}
+        {/* ===================================================
+            CONTENT
+        =================================================== */}
 
         {company && (
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
 
-            {/* ================= LEFT ================= */}
+            {/* =================================================
+                LEFT
+            ================================================= */}
 
             <div className="min-w-0 space-y-6">
 
-              {/* COMPANY HEADER */}
+              {/* =================================================
+                  COMPANY HEADER
+              ================================================= */}
 
-              <article className="
-                overflow-hidden rounded-3xl
-                border border-slate-200
-                bg-white
-                shadow-sm
-                dark:border-white/[0.07]
-                dark:bg-[#0B0D12]
-              ">
+              <article
+                className="
+                  overflow-hidden
+                  rounded-3xl
+                  border border-slate-200
+                  bg-white
+                  shadow-sm
+                  dark:border-white/[0.07]
+                  dark:bg-[#0B0D12]
+                "
+              >
 
-                {/* HEADER GRADIENT */}
+                {/* HEADER */}
 
                 <div className="h-32 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 sm:h-40" />
 
@@ -414,31 +503,38 @@ const CompanyDetails = () => {
 
                   <div className="-mt-12 sm:-mt-14">
 
-                    <div className="
-                      flex h-24 w-24
-                      items-center justify-center
-                      overflow-hidden rounded-2xl
-                      border-4 border-white
-                      bg-white shadow-xl
-                      dark:border-[#0B0D12]
-                      dark:bg-slate-900
-                    ">
+                    <div
+                      className="
+                        flex h-24 w-24
+                        items-center justify-center
+                        overflow-hidden
+                        rounded-2xl
+                        border-4
+                        border-white
+                        bg-white
+                        shadow-xl
+                        dark:border-[#0B0D12]
+                        dark:bg-slate-900
+                      "
+                    >
 
-                      {company?.companyLogo ? (
+                      {companyLogo ? (
                         <img
-                          src={company.companyLogo}
+                          src={companyLogo}
                           alt={`${companyName} logo`}
-                          className="h-full w-full object-cover"
+                          className="h-full w-full object-contain p-1"
                           onError={(e) => {
-                            e.currentTarget.style.display =
-                              "none";
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/meta.png";
                           }}
                         />
                       ) : (
-                        <Building2
-                          size={38}
-                          className="text-slate-400"
-                        />
+                        <div className="flex h-full w-full items-center justify-center bg-slate-50 dark:bg-slate-800">
+                          <Building2
+                            size={38}
+                            className="text-slate-400"
+                          />
+                        </div>
                       )}
 
                     </div>
@@ -453,51 +549,53 @@ const CompanyDetails = () => {
 
                       <div className="flex flex-wrap items-center gap-2">
 
-                        <h1 className="
-                          text-2xl font-bold
-                          tracking-tight
-                          text-slate-900
-                          dark:text-white
-                          sm:text-3xl
-                        ">
+                        <h1
+                          className="
+                            text-2xl
+                            font-bold
+                            tracking-tight
+                            text-slate-900
+                            dark:text-white
+                            sm:text-3xl
+                          "
+                        >
                           {companyName}
                         </h1>
 
-                        <span className="
-                          inline-flex items-center gap-1.5
-                          rounded-full
-                          border border-emerald-200
-                          bg-emerald-50
-                          px-2.5 py-1
-                          text-[10px] font-bold
-                          uppercase tracking-wide
-                          text-emerald-700
-                          dark:border-emerald-500/20
-                          dark:bg-emerald-500/10
-                          dark:text-emerald-400
-                        ">
+                        <span
+                          className="
+                            inline-flex
+                            items-center
+                            gap-1.5
+                            rounded-full
+                            border
+                            border-emerald-200
+                            bg-emerald-50
+                            px-2.5 py-1
+                            text-[10px]
+                            font-bold
+                            uppercase
+                            tracking-wide
+                            text-emerald-700
+                            dark:border-emerald-500/20
+                            dark:bg-emerald-500/10
+                            dark:text-emerald-400
+                          "
+                        >
                           <ShieldCheck size={13} />
                           Company
                         </span>
 
                       </div>
 
-                      {company?.industry && (
-                        <p className="
-                          mt-2 text-sm
-                          text-slate-500
-                          dark:text-slate-400
-                        ">
-                          {company.industry}
+                      {industry && (
+                        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                          {industry}
                         </p>
                       )}
 
                       {location && (
-                        <div className="
-                          mt-3 flex items-center gap-2
-                          text-sm text-slate-500
-                          dark:text-slate-400
-                        ">
+                        <div className="mt-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                           <MapPin size={15} />
                           {location}
                         </div>
@@ -511,12 +609,18 @@ const CompanyDetails = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="
-                          inline-flex h-fit
-                          items-center justify-center gap-2
-                          rounded-xl border
+                          inline-flex
+                          h-fit
+                          items-center
+                          justify-center
+                          gap-2
+                          rounded-xl
+                          border
                           border-slate-200
-                          bg-white px-4 py-2.5
-                          text-sm font-semibold
+                          bg-white
+                          px-4 py-2.5
+                          text-sm
+                          font-semibold
                           text-slate-700
                           transition
                           hover:border-blue-300
@@ -534,33 +638,60 @@ const CompanyDetails = () => {
 
                   </div>
 
-                  {/* STATS */}
+                  {/* ONLY OPEN JOBS */}
 
-                  <div className="
-                    mt-7 grid gap-3
-                    sm:grid-cols-3
-                  ">
+                  <div className="mt-7">
 
-                    <StatCard
-                      icon={Users}
-                      label="Employees"
-                      value={company?.employees}
-                      iconClass="text-blue-500"
-                    />
+                    <div
+                      className="
+                        flex
+                        items-center
+                        justify-between
+                        rounded-2xl
+                        border
+                        border-emerald-200
+                        bg-emerald-50
+                        px-5 py-4
+                        dark:border-emerald-500/20
+                        dark:bg-emerald-500/10
+                      "
+                    >
 
-                    <StatCard
-                      icon={CalendarDays}
-                      label="Founded"
-                      value={company?.founded}
-                      iconClass="text-purple-500"
-                    />
+                      <div className="flex items-center gap-3">
 
-                    <StatCard
-                      icon={BriefcaseBusiness}
-                      label="Open Jobs"
-                      value={activeJobs.length}
-                      iconClass="text-emerald-500"
-                    />
+                        <div
+                          className="
+                            flex h-10 w-10
+                            items-center justify-center
+                            rounded-xl
+                            bg-white
+                            text-emerald-600
+                            shadow-sm
+                            dark:bg-slate-900
+                            dark:text-emerald-400
+                          "
+                        >
+                          <BriefcaseBusiness size={19} />
+                        </div>
+
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            Open Jobs
+                          </p>
+
+                          <p className="mt-0.5 text-lg font-bold text-slate-900 dark:text-white">
+                            {activeJobs.length}
+                          </p>
+                        </div>
+
+                      </div>
+
+                      <BriefcaseBusiness
+                        size={28}
+                        className="text-emerald-500/50"
+                      />
+
+                    </div>
 
                   </div>
 
@@ -568,75 +699,78 @@ const CompanyDetails = () => {
 
               </article>
 
-              {/* ================= ABOUT ================= */}
+              {/* =================================================
+                  ABOUT
+              ================================================= */}
 
-              <section className="
-                rounded-3xl
-                border border-slate-200
-                bg-white p-6
-                dark:border-white/[0.07]
-                dark:bg-[#0B0D12]
-                sm:p-8
-              ">
+              <section
+                className="
+                  rounded-3xl
+                  border border-slate-200
+                  bg-white
+                  p-6
+                  dark:border-white/[0.07]
+                  dark:bg-[#0B0D12]
+                  sm:p-8
+                "
+              >
 
                 <div className="mb-5 flex items-center gap-3">
 
                   <div className="h-8 w-1 rounded-full bg-blue-600" />
 
                   <div>
-                    <h2 className="
-                      text-xl font-bold
-                      text-slate-900
-                      dark:text-white
-                    ">
+
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                       About {companyName}
                     </h2>
 
                     <p className="mt-1 text-xs text-slate-400">
                       Company overview
                     </p>
+
                   </div>
 
                 </div>
 
-                <p className="
-                  whitespace-pre-line
-                  text-sm leading-7
-                  text-slate-600
-                  dark:text-slate-300
-                ">
+                <p
+                  className="
+                    whitespace-pre-line
+                    text-sm
+                    leading-7
+                    text-slate-600
+                    dark:text-slate-300
+                  "
+                >
                   {description}
                 </p>
 
               </section>
 
-              {/* ================= COMPANY INFORMATION ================= */}
+              {/* =================================================
+                  COMPANY INFORMATION
+              ================================================= */}
 
-              <section className="
-                rounded-3xl
-                border border-slate-200
-                bg-white p-6
-                dark:border-white/[0.07]
-                dark:bg-[#0B0D12]
-                sm:p-8
-              ">
+              <section
+                className="
+                  rounded-3xl
+                  border border-slate-200
+                  bg-white
+                  p-6
+                  dark:border-white/[0.07]
+                  dark:bg-[#0B0D12]
+                  sm:p-8
+                "
+              >
 
                 <div className="mb-6">
 
-                  <h2 className="
-                    text-xl font-bold
-                    text-slate-900
-                    dark:text-white
-                  ">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                     Company Information
                   </h2>
 
-                  <p className="
-                    mt-1 text-sm
-                    text-slate-500
-                    dark:text-slate-400
-                  ">
-                    Available company and contact information
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Available company information
                   </p>
 
                 </div>
@@ -670,13 +804,13 @@ const CompanyDetails = () => {
                   <InfoItem
                     icon={Globe}
                     label="Website"
-                    value={website}
+                    value={website || null}
                     href={websiteUrl}
                     privateValue={!website}
                   />
 
                   <InfoItem
-                    icon={ExternalLink }
+                    icon={ExternalLink}
                     label="LinkedIn"
                     value={
                       linkedin
@@ -697,55 +831,55 @@ const CompanyDetails = () => {
                   <InfoItem
                     icon={BriefcaseBusiness}
                     label="Industry"
-                    value={company?.industry}
-                    privateValue={!company?.industry}
+                    value={industry}
+                    privateValue={!industry}
                   />
 
                 </div>
 
               </section>
 
-              {/* ================= HR CONTACT ================= */}
+              {/* =================================================
+                  HR CONTACT
+              ================================================= */}
 
-              <section className="
-                rounded-3xl
-                border border-slate-200
-                bg-white p-6
-                dark:border-white/[0.07]
-                dark:bg-[#0B0D12]
-                sm:p-8
-              ">
+              <section
+                className="
+                  rounded-3xl
+                  border border-slate-200
+                  bg-white
+                  p-6
+                  dark:border-white/[0.07]
+                  dark:bg-[#0B0D12]
+                  sm:p-8
+                "
+              >
 
                 <div className="flex items-start justify-between gap-4">
 
                   <div>
 
-                    <h2 className="
-                      text-xl font-bold
-                      text-slate-900
-                      dark:text-white
-                    ">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                       Recruiter / HR Contact
                     </h2>
 
-                    <p className="
-                      mt-1 text-sm
-                      text-slate-500
-                      dark:text-slate-400
-                    ">
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                       Contact details shared by the company
                     </p>
 
                   </div>
 
-                  <div className="
-                    rounded-xl
-                    bg-blue-50 p-3
-                    text-blue-600
-                    dark:bg-blue-500/10
-                    dark:text-blue-400
-                  ">
-                    <Users size={20} />
+                  <div
+                    className="
+                      rounded-xl
+                      bg-blue-50
+                      p-3
+                      text-blue-600
+                      dark:bg-blue-500/10
+                      dark:text-blue-400
+                    "
+                  >
+                    <BriefcaseBusiness size={20} />
                   </div>
 
                 </div>
@@ -753,27 +887,23 @@ const CompanyDetails = () => {
                 <div className="mt-6">
 
                   {recruiterName ? (
-                    <div className="
-                      rounded-2xl
-                      border border-slate-200
-                      bg-slate-50/70 p-5
-                      dark:border-white/[0.07]
-                      dark:bg-white/[0.03]
-                    ">
+                    <div
+                      className="
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        bg-slate-50/70
+                        p-5
+                        dark:border-white/[0.07]
+                        dark:bg-white/[0.03]
+                      "
+                    >
 
-                      <h3 className="
-                        font-semibold
-                        text-slate-900
-                        dark:text-white
-                      ">
+                      <h3 className="font-semibold text-slate-900 dark:text-white">
                         {recruiterName}
                       </h3>
 
-                      <p className="
-                        mt-1 text-xs
-                        text-slate-500
-                        dark:text-slate-400
-                      ">
+                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                         HR / Recruiter
                       </p>
 
@@ -807,41 +937,41 @@ const CompanyDetails = () => {
 
                     </div>
                   ) : (
-                    <div className="
-                      flex items-start gap-3
-                      rounded-2xl border
-                      border-slate-200
-                      bg-slate-50/70 p-5
-                      dark:border-white/[0.07]
-                      dark:bg-white/[0.03]
-                    ">
+                    <div
+                      className="
+                        flex
+                        items-start
+                        gap-3
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        bg-slate-50/70
+                        p-5
+                        dark:border-white/[0.07]
+                        dark:bg-white/[0.03]
+                      "
+                    >
 
-                      <div className="
-                        rounded-xl
-                        bg-slate-200 p-2.5
-                        text-slate-500
-                        dark:bg-slate-800
-                        dark:text-slate-400
-                      ">
+                      <div
+                        className="
+                          rounded-xl
+                          bg-slate-200
+                          p-2.5
+                          text-slate-500
+                          dark:bg-slate-800
+                          dark:text-slate-400
+                        "
+                      >
                         <LockKeyhole size={18} />
                       </div>
 
                       <div>
 
-                        <p className="
-                          font-semibold
-                          text-slate-800
-                          dark:text-slate-200
-                        ">
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
                           HR contact information is private
                         </p>
 
-                        <p className="
-                          mt-1 text-sm
-                          leading-6
-                          text-slate-500
-                          dark:text-slate-400
-                        ">
+                        <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                           This company has not provided public recruiter contact details.
                         </p>
 
@@ -854,53 +984,54 @@ const CompanyDetails = () => {
 
               </section>
 
-              {/* ================= OPEN JOBS ================= */}
+              {/* =================================================
+                  OPEN JOBS
+              ================================================= */}
 
-              <section className="
-                rounded-3xl
-                border border-slate-200
-                bg-white p-6
-                dark:border-white/[0.07]
-                dark:bg-[#0B0D12]
-                sm:p-8
-              ">
+              <section
+                id="open-jobs"
+                className="
+                  scroll-mt-24
+                  rounded-3xl
+                  border border-slate-200
+                  bg-white
+                  p-6
+                  dark:border-white/[0.07]
+                  dark:bg-[#0B0D12]
+                  sm:p-8
+                "
+              >
 
-                <div className="
-                  flex flex-col
-                  justify-between gap-3
-                  sm:flex-row sm:items-center
-                ">
+                <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
 
                   <div>
 
-                    <h2 className="
-                      text-xl font-bold
-                      text-slate-900
-                      dark:text-white
-                    ">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                       Open Jobs at {companyName}
                     </h2>
 
-                    <p className="
-                      mt-1 text-sm
-                      text-slate-500
-                      dark:text-slate-400
-                    ">
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                       Current opportunities available from this company
                     </p>
 
                   </div>
 
-                  <span className="
-                    inline-flex w-fit
-                    items-center gap-1.5
-                    rounded-full
-                    bg-blue-50 px-3 py-1.5
-                    text-xs font-semibold
-                    text-blue-600
-                    dark:bg-blue-500/10
-                    dark:text-blue-400
-                  ">
+                  <span
+                    className="
+                      inline-flex
+                      w-fit
+                      items-center
+                      gap-1.5
+                      rounded-full
+                      bg-blue-50
+                      px-3 py-1.5
+                      text-xs
+                      font-semibold
+                      text-blue-600
+                      dark:bg-blue-500/10
+                      dark:text-blue-400
+                    "
+                  >
                     <BriefcaseBusiness size={13} />
                     {activeJobs.length} Jobs
                   </span>
@@ -910,122 +1041,150 @@ const CompanyDetails = () => {
                 {activeJobs.length > 0 ? (
                   <div className="mt-6 space-y-3">
 
-                    {activeJobs.map((job) => (
+                    {activeJobs.map((job) => {
 
-                      <Link
-                        key={job._id}
-                        to={`/jobs/${job._id}`}
-                        className="
-                          group flex items-center
-                          justify-between gap-4
-                          rounded-2xl border
-                          border-slate-200
-                          bg-slate-50/50 p-4
-                          transition
-                          hover:border-blue-300
-                          hover:bg-blue-50/30
-                          dark:border-white/[0.07]
-                          dark:bg-white/[0.02]
-                          dark:hover:border-blue-500/30
-                          dark:hover:bg-blue-500/[0.04]
-                        "
-                      >
+                      const salary = formatSalary(
+                        job?.salaryRange ??
+                          job?.salary ??
+                          job?.salaryDetails
+                      );
 
-                        <div className="min-w-0">
+                      return (
+                        <Link
+                          key={job._id}
+                          to={`/jobs/${job._id}`}
+                          className="
+                            group
+                            block
+                            rounded-2xl
+                            border
+                            border-slate-200
+                            bg-slate-50/50
+                            p-4
+                            transition
+                            hover:border-blue-300
+                            hover:bg-blue-50/30
+                            dark:border-white/[0.07]
+                            dark:bg-white/[0.02]
+                            dark:hover:border-blue-500/30
+                            dark:hover:bg-blue-500/[0.04]
+                          "
+                        >
 
-                          <div className="flex flex-wrap items-center gap-2">
+                          <div className="flex items-start justify-between gap-4">
 
-                            <h3 className="
-                              truncate
-                              text-sm font-bold
-                              text-slate-900
-                              group-hover:text-blue-600
-                              dark:text-white
-                              dark:group-hover:text-blue-400
-                            ">
-                              {job.title}
-                            </h3>
+                            <div className="min-w-0">
 
-                          </div>
+                              <h3
+                                className="
+                                  truncate
+                                  text-sm
+                                  font-bold
+                                  text-slate-900
+                                  group-hover:text-blue-600
+                                  dark:text-white
+                                  dark:group-hover:text-blue-400
+                                "
+                              >
+                                {job?.title || "Job opportunity"}
+                              </h3>
 
-                          <div className="
-                            mt-2 flex flex-wrap
-                            items-center gap-x-3
-                            gap-y-1 text-xs
-                            text-slate-500
-                            dark:text-slate-400
-                          ">
-
-                            <span>
-                              {job.location || "Remote"}
-                            </span>
-
-                            <span>•</span>
-
-                            <span>
-                              {job.employmentType || "Full-time"}
-                            </span>
-
-                            {job.createdAt && (
-                              <>
-                                <span>•</span>
+                              <div
+                                className="
+                                  mt-2
+                                  flex
+                                  flex-wrap
+                                  items-center
+                                  gap-x-3
+                                  gap-y-2
+                                  text-xs
+                                  text-slate-500
+                                  dark:text-slate-400
+                                "
+                              >
 
                                 <span className="inline-flex items-center gap-1">
-                                  <Clock3 size={12} />
-                                  {getPostedTime(
-                                    job.createdAt
-                                  )}
+                                  <MapPin size={12} />
+                                  {job?.location || "Remote"}
                                 </span>
-                              </>
-                            )}
+
+                                <span>•</span>
+
+                                <span>
+                                  {job?.employmentType || "Full-time"}
+                                </span>
+
+                                <span>•</span>
+
+                                <span
+                                  className="
+                                    font-semibold
+                                    text-slate-700
+                                    dark:text-slate-300
+                                  "
+                                >
+                                  {salary}
+                                </span>
+
+                                {job?.createdAt && (
+                                  <>
+                                    <span>•</span>
+
+                                    <span className="inline-flex items-center gap-1">
+                                      <Clock3 size={12} />
+                                      {getPostedTime(job.createdAt)}
+                                    </span>
+                                  </>
+                                )}
+
+                              </div>
+
+                            </div>
+
+                            <ArrowUpRight
+                              size={18}
+                              className="
+                                mt-0.5
+                                shrink-0
+                                text-slate-400
+                                transition
+                                group-hover:-translate-y-0.5
+                                group-hover:translate-x-0.5
+                                group-hover:text-blue-600
+                              "
+                            />
 
                           </div>
 
-                        </div>
-
-                        <ArrowUpRight
-                          size={18}
-                          className="
-                            shrink-0
-                            text-slate-400
-                            transition
-                            group-hover:-translate-y-0.5
-                            group-hover:translate-x-0.5
-                            group-hover:text-blue-600
-                          "
-                        />
-
-                      </Link>
-
-                    ))}
+                        </Link>
+                      );
+                    })}
 
                   </div>
                 ) : (
-                  <div className="
-                    mt-6 rounded-2xl
-                    border border-dashed
-                    border-slate-300
-                    p-8 text-center
-                    dark:border-slate-700
-                  ">
+                  <div
+                    className="
+                      mt-6
+                      rounded-2xl
+                      border
+                      border-dashed
+                      border-slate-300
+                      p-8
+                      text-center
+                      dark:border-slate-700
+                    "
+                  >
 
                     <BriefcaseBusiness
                       size={34}
                       className="mx-auto text-slate-300 dark:text-slate-600"
                     />
 
-                    <h3 className="
-                      mt-3 font-semibold
-                      text-slate-800
-                      dark:text-slate-200
-                    ">
+                    <h3 className="mt-3 font-semibold text-slate-800 dark:text-slate-200">
                       No open jobs
                     </h3>
 
-                    <p className="
-                      mt-1 text-sm
-                      text-slate-500
-                    ">
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                       This company currently has no active job listings.
                     </p>
 
@@ -1036,26 +1195,45 @@ const CompanyDetails = () => {
 
             </div>
 
-            {/* ================= RIGHT SIDEBAR ================= */}
+            {/* =================================================
+                RIGHT SIDEBAR
+            ================================================= */}
 
             <aside className="space-y-6">
 
-              {/* AD */}
+              {/* =================================================
+                  SIDEBAR AD
+              ================================================= */}
 
-              <AdSlot
-                slot="6666666666"
-                className="min-h-[250px] w-full"
-              />
+              <div className="w-full">
 
-              {/* QUICK INFO */}
+                <AdSlot
+                  slot="6666666666"
+                  className="
+                    min-h-[250px]
+                    w-full
+                    overflow-hidden
+                    rounded-2xl
+                  "
+                />
 
-              <div className="
-                rounded-3xl
-                border border-slate-200
-                bg-white p-5
-                dark:border-white/[0.07]
-                dark:bg-[#0B0D12]
-              ">
+              </div>
+
+              {/* =================================================
+                  QUICK INFORMATION
+              ================================================= */}
+
+              <div
+                className="
+                  rounded-3xl
+                  border
+                  border-slate-200
+                  bg-white
+                  p-5
+                  dark:border-white/[0.07]
+                  dark:bg-[#0B0D12]
+                "
+              >
 
                 <div className="flex items-center gap-2">
 
@@ -1064,11 +1242,7 @@ const CompanyDetails = () => {
                     className="text-blue-600"
                   />
 
-                  <h3 className="
-                    font-bold
-                    text-slate-900
-                    dark:text-white
-                  ">
+                  <h3 className="font-bold text-slate-900 dark:text-white">
                     Quick Information
                   </h3>
 
@@ -1081,11 +1255,7 @@ const CompanyDetails = () => {
                       Company
                     </p>
 
-                    <p className="
-                      mt-1 text-sm font-semibold
-                      text-slate-800
-                      dark:text-slate-200
-                    ">
+                    <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {companyName}
                     </p>
                   </div>
@@ -1095,12 +1265,8 @@ const CompanyDetails = () => {
                       Industry
                     </p>
 
-                    <p className="
-                      mt-1 text-sm font-semibold
-                      text-slate-800
-                      dark:text-slate-200
-                    ">
-                      {company?.industry || "Not specified"}
+                    <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">
+                      {industry || "Not specified"}
                     </p>
                   </div>
 
@@ -1109,11 +1275,7 @@ const CompanyDetails = () => {
                       Location
                     </p>
 
-                    <p className="
-                      mt-1 text-sm font-semibold
-                      text-slate-800
-                      dark:text-slate-200
-                    ">
+                    <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {location || "Not specified"}
                     </p>
                   </div>
@@ -1123,11 +1285,7 @@ const CompanyDetails = () => {
                       Open positions
                     </p>
 
-                    <p className="
-                      mt-1 text-sm font-semibold
-                      text-blue-600
-                      dark:text-blue-400
-                    ">
+                    <p className="mt-1 text-sm font-semibold text-blue-600 dark:text-blue-400">
                       {activeJobs.length}
                     </p>
                   </div>
@@ -1136,23 +1294,34 @@ const CompanyDetails = () => {
 
               </div>
 
-              {/* CONTACT CTA */}
+              {/* =================================================
+                  CAREER CTA
+              ================================================= */}
 
-              <div className="
-                overflow-hidden rounded-3xl
-                bg-gradient-to-br
-                from-blue-600
-                via-indigo-600
-                to-purple-600
-                p-6 text-white
-                shadow-xl shadow-blue-600/10
-              ">
+              <div
+                className="
+                  overflow-hidden
+                  rounded-3xl
+                  bg-gradient-to-br
+                  from-blue-600
+                  via-indigo-600
+                  to-purple-600
+                  p-6
+                  text-white
+                  shadow-xl
+                  shadow-blue-600/10
+                "
+              >
 
-                <div className="
-                  mb-4 flex h-11 w-11
-                  items-center justify-center
-                  rounded-xl bg-white/15
-                ">
+                <div
+                  className="
+                    mb-4
+                    flex h-11 w-11
+                    items-center justify-center
+                    rounded-xl
+                    bg-white/15
+                  "
+                >
                   <BriefcaseBusiness size={21} />
                 </div>
 
@@ -1160,28 +1329,31 @@ const CompanyDetails = () => {
                   Interested in working here?
                 </h3>
 
-                <p className="
-                  mt-2 text-sm
-                  leading-6 text-white/80
-                ">
+                <p className="mt-2 text-sm leading-6 text-white/80">
                   Explore current openings and find a role that matches your skills.
                 </p>
 
                 {activeJobs.length > 0 && (
-                  <Link
-                    to="#open-jobs"
+                  <a
+                    href="#open-jobs"
                     className="
-                      mt-5 inline-flex
-                      items-center gap-2
-                      rounded-xl bg-white
+                      mt-5
+                      inline-flex
+                      items-center
+                      gap-2
+                      rounded-xl
+                      bg-white
                       px-4 py-2.5
-                      text-sm font-bold
+                      text-sm
+                      font-bold
                       text-blue-600
+                      transition
+                      hover:bg-slate-100
                     "
                   >
                     View Open Jobs
                     <ArrowUpRight size={15} />
-                  </Link>
+                  </a>
                 )}
 
               </div>

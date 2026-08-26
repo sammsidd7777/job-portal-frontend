@@ -167,7 +167,7 @@ export const footerLinks = [
       },
       {
         name: "Job Categories",
-        url: "/find-jos",
+        url: "/find-job",
       },
     ],
   },

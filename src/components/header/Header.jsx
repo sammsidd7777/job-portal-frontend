@@ -167,7 +167,7 @@ const Header = () => {
 
             <div className="hidden sm:block">
 
-              <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white sm:text-2xl">
+             <div className="text-xl font-black tracking-tight text-slate-900 dark:text-white sm:text-2xl">
 
                 Job
 
@@ -177,13 +177,11 @@ const Header = () => {
 
                 </span>
 
-              </h1>
+              </div>
 
-              <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-slate-400">
-
-                Find your future
-
-              </p>
+           <p className="text-xs font-medium tracking-wide text-slate-400">
+  Find your future
+</p>
 
             </div>
 
@@ -254,23 +252,16 @@ const Header = () => {
 
           <div className="hidden items-center lg:flex">
 
-            <div className="group flex cursor-default items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-500/10 dark:border-blue-900/50 dark:bg-blue-950/30">
+          <div className="flex cursor-default items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 dark:border-slate-700 dark:bg-slate-900">
+  <span className="relative flex h-2 w-2">
+    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-400 opacity-50" />
+    <span className="relative inline-flex h-2 w-2 rounded-full bg-slate-500 dark:bg-slate-400" />
+  </span>
 
-              <span className="relative flex h-2.5 w-2.5">
-
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-75" />
-
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-blue-600 dark:bg-blue-400" />
-
-              </span>
-
-              <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
-
-                More features coming soon
-
-              </span>
-
-            </div>
+  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+    More features coming soon
+  </span>
+</div>
 
           </div>
 

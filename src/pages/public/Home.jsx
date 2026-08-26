@@ -32,19 +32,18 @@ const Home = () => {
           No Google AdSense → WhatsApp Promotion
       ===================================================== */}
 <section className="bg-[#030712]">
-  <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-    <AdSlot
-      slot="YOUR_AD_SLOT_ID"
-      className="w-full"
-      label="Advertisement"
-      fallbackTitle="Get Latest Job Updates 🚀"
-      fallbackDescription="Join our Job Hunter WhatsApp community and get fresh job opportunities directly."
-      fallbackButton="Join WhatsApp"
-      fallbackUrl="YOUR_WHATSAPP_GROUP_LINK"
-    />
-  </div>
+    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+        <AdSlot
+            slot="YOUR_AD_SLOT_ID"
+            className="w-full"
+            label="Advertisement"
+            fallbackTitle="Get latest job updates"
+            fallbackDescription="Join the Job Hunter WhatsApp community and get fresh job opportunities directly."
+            fallbackButton="Join WhatsApp"
+            fallbackUrl="YOUR_WHATSAPP_GROUP_LINK"
+        />
+    </div>
 </section>
-
       {/* ================= FEATURED JOBS ================= */}
 
       <FeaturedJobs />
@@ -81,6 +80,7 @@ const Home = () => {
 
       {/* ================= HOW IT WORKS ================= */}
 
+      {/* <HowItWorks /> */}
       <HowItWorks />
 
       {/* ================= CTA ================= */}

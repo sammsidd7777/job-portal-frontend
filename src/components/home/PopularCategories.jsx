@@ -1,165 +1,214 @@
 import { Link } from "react-router-dom";
 import {
   Code2,
+  Monitor,
+  ServerCog,
+  Layers3,
   Palette,
-  BarChart3,
   Megaphone,
-  Headphones,
+  BarChart3,
   BriefcaseBusiness,
-  Stethoscope,
-  GraduationCap,
   ArrowUpRight,
 } from "lucide-react";
 
 const categories = [
   {
-    name: "Technology",
-    jobs: "1,240",
+    name: "Software Development",
+    description: "Build software, applications and modern digital products.",
     icon: Code2,
-    color: "from-blue-500 to-cyan-500",
+    search: "Software Development",
+    image:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80",
   },
   {
-    name: "Design & Creative",
-    jobs: "860",
+    name: "Frontend Development",
+    description: "Create fast, responsive and engaging web experiences.",
+    icon: Monitor,
+    search: "Frontend Development",
+    image:
+      "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Backend Development",
+    description: "Work with APIs, servers, databases and backend systems.",
+    icon: ServerCog,
+    search: "Backend Development",
+    image:
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Full Stack Development",
+    description: "Work across frontend, backend and complete web applications.",
+    icon: Layers3,
+    search: "Full Stack Development",
+    image:
+      "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "UI/UX & Graphic Design",
+    description: "Design beautiful interfaces, visuals and digital experiences.",
     icon: Palette,
-    color: "from-purple-500 to-pink-500",
+    search: "UI UX Graphic Design",
+    image:
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80",
   },
   {
-    name: "Marketing",
-    jobs: "540",
+    name: "Digital Marketing",
+    description: "Explore SEO, social media, content and online marketing roles.",
     icon: Megaphone,
-    color: "from-orange-500 to-red-500",
+    search: "Digital Marketing",
+    image:
+      "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&w=900&q=80",
   },
   {
-    name: "Finance",
-    jobs: "430",
+    name: "Data & Analytics",
+    description: "Discover opportunities in data, analytics, SQL and BI.",
     icon: BarChart3,
-    color: "from-emerald-500 to-green-500",
+    search: "Data Analytics",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
   },
   {
-    name: "Customer Support",
-    jobs: "320",
-    icon: Headphones,
-    color: "from-cyan-500 to-blue-500",
-  },
-  {
-    name: "Business",
-    jobs: "680",
+    name: "Business & Management",
+    description: "Find roles in operations, sales, HR and business management.",
     icon: BriefcaseBusiness,
-    color: "from-indigo-500 to-purple-500",
-  },
-  {
-    name: "Healthcare",
-    jobs: "290",
-    icon: Stethoscope,
-    color: "from-rose-500 to-pink-500",
-  },
-  {
-    name: "Education",
-    jobs: "210",
-    icon: GraduationCap,
-    color: "from-yellow-500 to-orange-500",
+    search: "Business Management",
+    image:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
   },
 ];
 
 const PopularCategories = () => {
   return (
-    <section className="relative overflow-hidden bg-white py-24 dark:bg-slate-950">
-
+    <section className="relative overflow-hidden bg-slate-50 py-20 dark:bg-slate-950">
       {/* Background decoration */}
-      <div className="pointer-events-none absolute left-0 top-20 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-32 top-10 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl"
+      />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-32 bottom-10 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl"
+      />
 
-        {/* HEADER */}
-        <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* ================= HEADER ================= */}
+        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
-              Explore Opportunities
-            </p>
+            {/* Eyebrow */}
+            <div className="mb-3 flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-1.5 rounded-full bg-blue-600"
+              />
 
-            <h2 className="max-w-2xl text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white">
-              Find the right job in your
-              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                favorite category
+              <span className="text-sm font-semibold tracking-wide text-blue-600">
+                Explore opportunities
+              </span>
+            </div>
+
+            {/* Heading */}
+            <h2 className="max-w-2xl text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white">
+              Find jobs by{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                category
               </span>
             </h2>
 
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-500 dark:text-slate-400">
-              Explore thousands of opportunities from top companies and discover
-              the career path that matches your skills.
+            {/* Description */}
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-500 dark:text-slate-400">
+              Explore opportunities across technology, design, marketing,
+              data and business.
             </p>
           </div>
 
+          {/* View all */}
           <Link
             to="/find-job"
-            className="group flex w-fit items-center gap-2 rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-600 hover:text-blue-600 dark:border-slate-800 dark:text-slate-300"
+            className="group inline-flex w-fit items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-500 hover:text-blue-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
           >
-            View all jobs
+            <span>View all jobs</span>
+
             <ArrowUpRight
               size={17}
-              className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+              aria-hidden="true"
+              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             />
           </Link>
-
         </div>
 
-        {/* CATEGORY GRID */}
+        {/* ================= CATEGORY GRID ================= */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
           {categories.map((category) => {
             const Icon = category.icon;
 
             return (
               <Link
                 key={category.name}
-                to="/find-job"
-                className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+                to={`/find-job?search=${encodeURIComponent(category.search)}`}
+                className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-500/10 dark:border-slate-800 dark:bg-slate-900"
               >
+                {/* ================= IMAGE ================= */}
+                <div className="relative h-44 overflow-hidden">
+                  <img
+                    src={category.image}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  />
 
-                {/* Hover gradient */}
-                <div
-                  className={`absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-to-br ${category.color} opacity-0 blur-3xl transition duration-500 group-hover:opacity-20`}
-                />
+                  {/* Image overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
 
-                {/* Icon */}
-                <div
-                  className={`relative mb-7 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${category.color} text-white shadow-lg transition duration-300 group-hover:scale-110 group-hover:rotate-3`}
-                >
-                  <Icon size={26} strokeWidth={1.8} />
+                  {/* Icon */}
+                  <div className="absolute left-5 top-5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/30 bg-white/90 text-blue-600 shadow-lg backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 dark:bg-slate-900/90 dark:text-blue-400">
+                    <Icon
+                      size={21}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                  </div>
+
+                 
                 </div>
 
-                {/* Content */}
-                <div className="relative">
-
-                  <h3 className="text-lg font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-white">
+                {/* ================= CONTENT ================= */}
+                <div className="p-5">
+                  <h3 className="text-lg font-bold text-slate-900 transition-colors duration-300 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
                     {category.name}
                   </h3>
 
-                  <div className="mt-3 flex items-center justify-between">
+                  <p className="mt-2 min-h-[48px] text-sm leading-6 text-slate-500 dark:text-slate-400">
+                    {category.description}
+                  </p>
 
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      {category.jobs} open positions
-                    </p>
+                  {/* Bottom action */}
+                  <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
+                    <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                      Browse jobs
+                    </span>
 
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-all group-hover:bg-blue-600 group-hover:text-white dark:bg-slate-800">
-                      <ArrowUpRight size={15} />
-                    </div>
-
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white dark:bg-slate-800 dark:text-slate-400">
+                      <ArrowUpRight
+                        size={16}
+                        aria-hidden="true"
+                        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      />
+                    </span>
                   </div>
-
                 </div>
 
+                {/* Hover glow */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-blue-500/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                />
               </Link>
             );
           })}
-
         </div>
-
       </div>
-
     </section>
   );
 };

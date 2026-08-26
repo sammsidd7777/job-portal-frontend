@@ -57,14 +57,7 @@ return ( <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
 
     <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-16 sm:px-6 lg:px-8">
 
-      {/* Breadcrumb */}
-      <div className="mb-8 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-        <span>Home</span>
-        <span>/</span>
-        <span className="font-medium text-blue-600">
-          Companies
-        </span>
-      </div>
+   
 
       {/* Hero Content */}
       <div className="mx-auto max-w-3xl text-center">

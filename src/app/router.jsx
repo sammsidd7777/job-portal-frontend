@@ -2,6 +2,12 @@ import { lazy, Suspense } from "react";
 import Loader from "../helper/Loader ";
 import { createBrowserRouter } from "react-router-dom";
 import JobDetailPage from "../components/jobs/JobDetailPage";
+import PrivacyPolicy from "../pages/Legal/PrivacyPolicy";
+import TermsOfService from "../pages/Legal/TermsOfService";
+import About from "../pages/Legal/About";
+import Contact from "../pages/Legal/Contact";
+import Disclaimer from "../pages/Legal/Disclaimer";
+import CookiePolicy from "../pages/Legal/CookiePolicy";
 
 const PublicLayout = lazy(() => import("../layouts/PublicLayout"));
 
@@ -9,8 +15,6 @@ const Home = lazy(() => import("../pages/public/Home"));
 const BrowseCompanies = lazy(() => import("../pages/public/BrowseCompanies"));
 const FindJob = lazy(() => import("../pages/public/FindJob"));
 const CompanyDetails = lazy(() => import("../pages/public/CompanyDetails"));
-const PrivacyPolicy = lazy(() => import("../pages/public/PrivacyPolicy"));
-const TermsOfService = lazy(() => import("../pages/public/TermsOfService"));
 const NotFound = lazy(() => import("../components/common/NotFound"));
 
 
@@ -49,6 +53,14 @@ const router = createBrowserRouter([
         element: Loadable(CompanyDetails),
       },
       {
+        path: "about",
+        element: Loadable(About),
+      },
+      {
+        path: "contact",
+        element: Loadable(Contact),
+      },
+      {
         path: "privacy",
         element: Loadable(PrivacyPolicy),
       },
@@ -57,57 +69,65 @@ const router = createBrowserRouter([
         element: Loadable(TermsOfService),
       },
       {
+        path: "disclaimer",
+        element: Loadable(Disclaimer),
+      },
+      {
+  path: "cookies",
+  element: Loadable(CookiePolicy),
+},
+      {
         path: "*",
         element: Loadable(NotFound),
       },
     ],
   },
 
-{
-  // path: "/hr",
-  // element: Loadable(HRLayout),
+  {
+    // path: "/hr",
+    // element: Loadable(HRLayout),
 
-  // children: [
-  //   {
-  //     index: true,
-  //     element: Loadable(HRDashboard),
-  //   },
-  //   {
-  //     path: "dashboard",
-  //     element: Loadable(HRDashboard),
-  //   },
-  //   {
-  //     path: "add-job",
-  //     element: Loadable(CreateJob),
-  //   },
-  //   {
-  //     path: "manage-jobs",
-  //     element: Loadable(ManageJobs),
-  //   },
-  //   {
-  //     path: "applicants",
-  //     element: Loadable(ApplicantDetails),
-  //   },
-  //   {
-  //     path: "company",
-  //     element: Loadable(CompanyProfile),
-  //   },
-  //   {
-  //     path: "settings",
-  //     element: Loadable(Settings),
-  //   },
-  //   {
-  //     path: "messages",
-  //     element: Loadable(Messages),
-  //   },
+    // children: [
+    //   {
+    //     index: true,
+    //     element: Loadable(HRDashboard),
+    //   },
+    //   {
+    //     path: "dashboard",
+    //     element: Loadable(HRDashboard),
+    //   },
+    //   {
+    //     path: "add-job",
+    //     element: Loadable(CreateJob),
+    //   },
+    //   {
+    //     path: "manage-jobs",
+    //     element: Loadable(ManageJobs),
+    //   },
+    //   {
+    //     path: "applicants",
+    //     element: Loadable(ApplicantDetails),
+    //   },
+    //   {
+    //     path: "company",
+    //     element: Loadable(CompanyProfile),
+    //   },
+    //   {
+    //     path: "settings",
+    //     element: Loadable(Settings),
+    //   },
+    //   {
+    //     path: "messages",
+    //     element: Loadable(Messages),
+    //   },
 
-  //   // Candidate/Application Detail
-  //   {
-  //     path: "candidates/:candidateId/:applicationId",
-  //     element: Loadable(ApplicantDetails),
-  //   },
-  // ],
-},
+    //   // Candidate/Application Detail
+    //   {
+    //     path: "candidates/:candidateId/:applicationId",
+    //     element: Loadable(ApplicantDetails),
+    //   },
+    // ],
+  },
 
   // {
   //   path: "/candidate",

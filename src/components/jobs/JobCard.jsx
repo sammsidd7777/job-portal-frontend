@@ -3,13 +3,12 @@ import {
   Bookmark,
   BookmarkCheck,
   MapPin,
-  BriefcaseBusiness,
-  Clock3,
   ArrowUpRight,
   ShieldCheck,
-  BadgeCheck,
-  Sparkles,
   MessageCircle,
+  Sparkles,
+  Clock3,
+  BriefcaseBusiness,
 } from "lucide-react";
 import getPostedTime from "./getPostedTime";
 
@@ -25,18 +24,23 @@ const JobCard = ({
   featured = false,
 }) => {
   // =====================================================
-  // COMPANY INFO
+  // COMPANY
   // =====================================================
 
-  const companyName =
-    jobType === "external" || job?.jobType === "external"
-      ? job?.companyName || "Company"
-      : job?.company?.companyName || "Company";
+  const isExternal =
+    jobType === "external" || job?.jobType === "external";
+
+  const companyName = isExternal
+    ? job?.companyName || "Company"
+    : job?.company?.companyName ||
+      job?.companyName ||
+      "Company";
 
   const resolvedLogo =
     companyLogo ||
     job?.companyLogo ||
-    job?.company?.companyLogo;
+    job?.company?.companyLogo ||
+    "";
 
   // =====================================================
   // APPLY METHOD
@@ -51,13 +55,20 @@ const JobCard = ({
   const handleWhatsAppApply = () => {
     if (!job?.whatsappNumber) return;
 
-    // Remove spaces, +, -, brackets etc.
-    const number = job.whatsappNumber.replace(/\D/g, "");
+    const number = String(job.whatsappNumber).replace(/\D/g, "");
 
     if (!number) return;
 
+    const message =
+      job?.whatsappMessage ||
+      `Hi, I am interested in the ${job?.title || "job"} position at ${companyName}.`;
+
+    const whatsappUrl = `https://wa.me/${number}?text=${encodeURIComponent(
+      message
+    )}`;
+
     window.open(
-      `https://wa.me/${number}`,
+      whatsappUrl,
       "_blank",
       "noopener,noreferrer"
     );
@@ -82,6 +93,8 @@ const JobCard = ({
   // =====================================================
 
   const handleInternalApply = () => {
+    if (!job?._id) return;
+
     onApply?.(job);
   };
 
@@ -90,601 +103,784 @@ const JobCard = ({
   // =====================================================
 
   const renderApplyButton = () => {
-    // -----------------------------------------------
-    // ADMIN EXTERNAL JOB
-    // -----------------------------------------------
+    // ---------------------------------------------------
+    // WHATSAPP
+    // ---------------------------------------------------
 
-   // Website
-if (
-  applyMethod === "website" &&
-  job?.externalApplyUrl
-) {
-  return (
-    <button
-      onClick={handleWebsiteApply}
-      className="
-        flex w-full items-center justify-center gap-2
-        rounded-xl border border-slate-900
-        bg-slate-900 py-3.5
-        text-sm font-semibold tracking-tight text-white
-        transition-all duration-200
-        hover:bg-slate-800
-        hover:shadow-[0_8px_20px_-6px_rgba(15,23,42,0.4)]
-        dark:border-white
-        dark:bg-white
-        dark:text-slate-900
-        dark:hover:bg-slate-100
-      "
-    >
-      Apply on Company Website
-      <ArrowUpRight size={16} strokeWidth={2} />
-    </button>
-  );
-}
+    if (
+      applyMethod === "whatsapp" &&
+      job?.whatsappNumber
+    ) {
+      return (
+        <button
+          type="button"
+          onClick={handleWhatsAppApply}
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-emerald-600
+            px-4
+            py-2.5
+            text-xs
+            font-semibold
+            text-white
+            transition-all
+            duration-200
+            hover:bg-emerald-700
+            hover:shadow-md
+            focus:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-emerald-500
+            focus-visible:ring-offset-2
+            dark:focus-visible:ring-offset-[#0f1117]
+          "
+        >
+          Apply via WhatsApp
+          <MessageCircle
+            size={14}
+            strokeWidth={2.2}
+          />
+        </button>
+      );
+    }
 
-// WhatsApp
-if (
-  applyMethod === "whatsapp" &&
-  job?.whatsappNumber
-) {
-  return (
-    <button
-      onClick={handleWhatsAppApply}
-      className="
-        flex w-full items-center justify-center gap-2
-        rounded-xl
-        bg-emerald-600
-        py-3.5
-        text-sm
-        font-semibold
-        tracking-tight
-        text-white
-        transition-all
-        duration-200
-        hover:bg-emerald-700
-        hover:shadow-[0_8px_20px_-6px_rgba(16,185,129,0.4)]
-      "
-    >
-      Apply via WhatsApp
-      <MessageCircle size={16} strokeWidth={2} />
-    </button>
-  );
-}
+    // ---------------------------------------------------
+    // WEBSITE
+    // ---------------------------------------------------
 
-// Safety fallback
-if (job?.externalApplyUrl) {
-  return (
-    <button
-      onClick={handleWebsiteApply}
-      className="
-        flex w-full items-center justify-center gap-2
-        rounded-xl border border-slate-900
-        bg-slate-900
-        py-3.5
-        text-sm font-semibold tracking-tight text-white
-        transition-all duration-200
-        hover:bg-slate-800
-        dark:border-white
-        dark:bg-white
-        dark:text-slate-900
-      "
-    >
-     Apply Directly
-      <ArrowUpRight size={16} strokeWidth={2} />
-    </button>
-  );
-}
+    if (
+      applyMethod === "website" &&
+      job?.externalApplyUrl
+    ) {
+      return (
+        <button
+          type="button"
+          onClick={handleWebsiteApply}
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-slate-950
+            px-4
+            py-2.5
+            text-xs
+            font-semibold
+            text-white
+            transition-all
+            duration-200
+            hover:bg-slate-800
+            hover:shadow-md
+            focus:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-slate-500
+            focus-visible:ring-offset-2
+            dark:bg-white
+            dark:text-slate-950
+            dark:hover:bg-slate-100
+            dark:focus-visible:ring-offset-[#0f1117]
+          "
+        >
+          Apply now
+          <ArrowUpRight
+            size={14}
+            strokeWidth={2.2}
+          />
+        </button>
+      );
+    }
 
-// No apply method
-return (
-  <button
-    disabled
-    className="
-      flex w-full items-center justify-center
-      rounded-xl
-      bg-slate-300
-      py-3.5
-      text-sm
-      font-semibold
-      text-slate-600
-      cursor-not-allowed
-      dark:bg-slate-700
-      dark:text-slate-400
-    "
-  >
-    Application Unavailable
-  </button>
-);
+    // ---------------------------------------------------
+    // EXTERNAL FALLBACK
+    // ---------------------------------------------------
 
-    // -----------------------------------------------
-    // INTERNAL HR JOB
-    // -----------------------------------------------
+    if (
+      isExternal &&
+      job?.externalApplyUrl
+    ) {
+      return (
+        <button
+          type="button"
+          onClick={handleWebsiteApply}
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-slate-950
+            px-4
+            py-2.5
+            text-xs
+            font-semibold
+            text-white
+            transition-all
+            duration-200
+            hover:bg-slate-800
+            hover:shadow-md
+            focus:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-slate-500
+            focus-visible:ring-offset-2
+            dark:bg-white
+            dark:text-slate-950
+            dark:hover:bg-slate-100
+            dark:focus-visible:ring-offset-[#0f1117]
+          "
+        >
+          Apply now
+          <ArrowUpRight
+            size={14}
+            strokeWidth={2.2}
+          />
+        </button>
+      );
+    }
+
+    // ---------------------------------------------------
+    // INTERNAL
+    // ---------------------------------------------------
+
+    if (
+      !isExternal &&
+      (applyMethod === "internal" || !applyMethod)
+    ) {
+      return (
+        <button
+          type="button"
+          onClick={handleInternalApply}
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-slate-950
+            px-4
+            py-2.5
+            text-xs
+            font-semibold
+            text-white
+            transition-all
+            duration-200
+            hover:bg-slate-800
+            hover:shadow-md
+            focus:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-slate-500
+            focus-visible:ring-offset-2
+            dark:bg-white
+            dark:text-slate-950
+            dark:hover:bg-slate-100
+            dark:focus-visible:ring-offset-[#0f1117]
+          "
+        >
+          Apply now
+          <ArrowUpRight
+            size={14}
+            strokeWidth={2.2}
+          />
+        </button>
+      );
+    }
+
+    // ---------------------------------------------------
+    // UNAVAILABLE
+    // ---------------------------------------------------
 
     return (
       <button
-        onClick={handleInternalApply}
+        type="button"
+        disabled
         className="
-          flex w-full items-center justify-center gap-2
-          rounded-xl border border-slate-900
-          bg-slate-900 py-3.5
-          text-sm font-semibold tracking-tight text-white
-          transition-all duration-200
-
-          hover:bg-slate-800
-          hover:shadow-[0_8px_20px_-6px_rgba(15,23,42,0.4)]
-
-          dark:border-white
-          dark:bg-white
-          dark:text-slate-900
-          dark:hover:bg-slate-100
+          inline-flex
+          cursor-not-allowed
+          items-center
+          justify-center
+          rounded-xl
+          bg-slate-100
+          px-4
+          py-2.5
+          text-xs
+          font-semibold
+          text-slate-400
+          dark:bg-white/[0.06]
+          dark:text-slate-500
         "
       >
-        Apply now
-        <ArrowUpRight size={16} strokeWidth={2} />
+        Apply unavailable
       </button>
     );
   };
 
+  // =====================================================
+  // LOCATION
+  // =====================================================
+
+  const location = job?.location || "Remote";
+
+  // =====================================================
+  // REMOTE
+  // =====================================================
+
+  const isRemote =
+    location
+      .toLowerCase()
+      .includes("remote") ||
+    location
+      .toLowerCase()
+      .includes("work from home") ||
+    location
+      .toLowerCase()
+      .includes("wfh");
+
+  // =====================================================
+  // SALARY
+  // =====================================================
+
+  const salaryMin = job?.salaryRange?.min;
+  const salaryMax = job?.salaryRange?.max;
+
+  const hasSalary =
+    salaryMin !== null &&
+    salaryMin !== undefined &&
+    salaryMin !== "";
+
+  const hasSalaryMax =
+    salaryMax !== null &&
+    salaryMax !== undefined &&
+    salaryMax !== "";
+
+  const formatSalary = (value) => {
+    if (!value) return "";
+
+    return new Intl.NumberFormat("en-IN").format(
+      Number(value)
+    );
+  };
+
+  // =====================================================
+  // POSTED TIME
+  // =====================================================
+
+  const postedTime = job?.createdAt
+    ? getPostedTime(job.createdAt)
+    : "Recently";
+
+  // =====================================================
+  // JOB CATEGORY
+  // =====================================================
+
+  const category =
+    job?.jobCategory ||
+    job?.category ||
+    "";
+
+  // =====================================================
+  // EXPERIENCE
+  // =====================================================
+
+  const experience =
+    job?.experienceLevel ||
+    job?.experience ||
+    "";
+
+  // =====================================================
+  // CARD
+  // =====================================================
+
   return (
     <article
       className={`
-        group relative flex h-full flex-col
-        overflow-hidden rounded-[20px]
-        border bg-white p-7
-        transition-all duration-500 ease-out
-
-        dark:bg-[#0B0D12]
+        group
+        relative
+        flex
+        h-full
+        min-w-0
+        flex-col
+        overflow-hidden
+        rounded-[22px]
+        border
+        bg-white
+        p-5
+        transition-all
+        duration-300
+        dark:bg-[#0f1117]
 
         ${
           featured
             ? `
-              border-amber-300/60
-              shadow-[0_1px_2px_rgba(15,23,42,0.06),0_0_0_1px_rgba(245,158,11,0.08)]
+              border-amber-200
+              shadow-[0_2px_10px_rgba(245,158,11,0.08)]
               hover:-translate-y-1
-              hover:border-amber-400/70
-              hover:shadow-[0_28px_56px_-16px_rgba(180,120,10,0.22),0_0_0_1px_rgba(245,158,11,0.18)]
+              hover:border-amber-300
+              hover:shadow-[0_18px_40px_-20px_rgba(245,158,11,0.35)]
 
-              dark:border-amber-500/25
-              dark:hover:border-amber-500/40
+              dark:border-amber-500/20
+              dark:hover:border-amber-500/35
             `
             : `
-              border-slate-200/70
-              shadow-[0_1px_2px_rgba(15,23,42,0.04)]
+              border-slate-200/80
+              shadow-[0_2px_8px_rgba(15,23,42,0.04)]
               hover:-translate-y-1
               hover:border-slate-300
-              hover:shadow-[0_28px_56px_-16px_rgba(15,23,42,0.20)]
+              hover:shadow-[0_18px_40px_-20px_rgba(15,23,42,0.20)]
 
               dark:border-white/[0.08]
-              dark:hover:border-white/[0.16]
+              dark:hover:border-white/[0.14]
             `
         }
       `}
     >
-      {/* =====================================================
-          AMBIENT GLOW
-      ===================================================== */}
-
-      <div
-        aria-hidden="true"
-        className={`
-          pointer-events-none absolute
-          -right-16 -top-16
-          h-40 w-40
-          rounded-full
-          blur-3xl
-          transition-opacity
-          duration-500
-          opacity-0
-          group-hover:opacity-100
-
-          ${
-            featured
-              ? "bg-amber-300/25"
-              : "bg-slate-300/20 dark:bg-white/[0.06]"
-          }
-        `}
-      />
-
-      {/* =====================================================
-          FEATURED
-      ===================================================== */}
+      {/* =================================================
+          FEATURED INDICATOR
+      ================================================= */}
 
       {featured && (
-        <div className="mb-5 -mt-1 flex items-center gap-1.5">
-          <Sparkles
-            size={13}
-            strokeWidth={2}
-            className="text-amber-500"
-          />
-
-          <span
-            className="
-              text-[11px]
-              font-semibold
-              uppercase
-              tracking-[0.08em]
-              text-amber-600
-              dark:text-amber-400
-            "
-          >
-            Featured opportunity
-          </span>
+        <div
+          className="
+            absolute
+            right-5
+            top-5
+            inline-flex
+            items-center
+            gap-1
+            rounded-full
+            bg-amber-50
+            px-2
+            py-1
+            text-[10px]
+            font-semibold
+            text-amber-600
+            dark:bg-amber-500/10
+            dark:text-amber-400
+          "
+        >
+          <Sparkles size={11} />
+          Featured
         </div>
       )}
 
-      {/* =====================================================
-          TOP
-      ===================================================== */}
+      {/* =================================================
+          TOP ROW
+      ================================================= */}
 
-      <div className="relative flex items-start justify-between gap-4">
-        {/* LOGO */}
+      <div className="flex items-start justify-between gap-3">
+        {/* COMPANY LOGO */}
 
         <div
           className="
-            flex h-14 w-14 shrink-0
-            items-center justify-center
-            overflow-hidden rounded-2xl
-            border border-slate-200/80
-            bg-gradient-to-b from-slate-50 to-white
-            text-base font-semibold
-            tracking-tight text-slate-500
-            shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)]
+            flex
+            h-12
+            w-12
+            shrink-0
+            items-center
+            justify-center
+            overflow-hidden
+            rounded-[14px]
+            border
+            border-slate-200
+            bg-white
+            text-sm
+            font-bold
+            text-slate-500
+            shadow-sm
 
             dark:border-white/10
-            dark:from-white/[0.06]
-            dark:to-white/[0.02]
+            dark:bg-white/[0.04]
             dark:text-slate-400
           "
         >
           {resolvedLogo ? (
             <img
               src={resolvedLogo}
-              alt={companyName}
-              className="h-full w-full object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
+              alt={`${companyName} logo`}
+              className="h-full w-full object-contain p-1.5"
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.style.display =
+                  "none";
               }}
             />
           ) : (
-            companyName?.charAt(0)?.toUpperCase() || "J"
+            companyName
+              ?.charAt(0)
+              ?.toUpperCase() || "J"
           )}
         </div>
 
         {/* SAVE */}
 
         <button
-          onClick={() => onSave?.(job._id)}
-          disabled={isSaving}
+          type="button"
+          onClick={() => onSave?.(job?._id)}
+          disabled={isSaving || !job?._id}
           aria-label={
             isSaved
-              ? "Remove from saved jobs"
-              : "Save job"
+              ? `Remove ${job?.title || "job"} from saved jobs`
+              : `Save ${job?.title || "job"}`
           }
+          aria-pressed={isSaved}
           className="
-            rounded-full p-2
-            text-slate-300
-            transition-colors duration-200
+            inline-flex
+            items-center
+            gap-1.5
+            rounded-xl
+            border
+            border-slate-200
+            bg-white
+            px-2.5
+            py-2
+            text-xs
+            font-medium
+            text-slate-500
+            transition-all
+            duration-200
 
+            hover:border-slate-300
             hover:bg-slate-50
-            hover:text-slate-700
+            hover:text-slate-900
 
-            dark:text-slate-600
+            disabled:cursor-not-allowed
+            disabled:opacity-50
+
+            dark:border-white/10
+            dark:bg-white/[0.03]
+            dark:text-slate-400
+            dark:hover:border-white/20
             dark:hover:bg-white/[0.06]
-            dark:hover:text-slate-200
+            dark:hover:text-white
           "
         >
           {isSaved ? (
             <BookmarkCheck
-              size={19}
-              className="text-slate-900 dark:text-white"
+              size={14}
+              strokeWidth={2.2}
+              className="text-blue-600 dark:text-blue-400"
             />
           ) : (
             <Bookmark
-              size={19}
-              strokeWidth={1.75}
+              size={14}
+              strokeWidth={1.9}
             />
           )}
+
+          <span className="hidden sm:inline">
+            {isSaved ? "Saved" : "Save"}
+          </span>
         </button>
       </div>
 
-      {/* =====================================================
-          JOB TITLE
-      ===================================================== */}
+      {/* =================================================
+          COMPANY + POSTED
+      ================================================= */}
 
-      <div className="relative mt-6">
-        <Link
-          to={`/jobs/${job._id}`}
+      <div className="mt-4 flex min-w-0 items-center gap-2">
+        <span
           className="
-            block
-            rounded-md
-            focus:outline-none
-            focus-visible:ring-2
-            focus-visible:ring-slate-400
-          "
-        >
-          <h3
-            className="
-              line-clamp-1
-              font-serif
-              text-[1.3rem]
-              font-medium
-              tracking-[-0.01em]
-              text-slate-900
-              transition-colors
-              duration-200
-              group-hover:text-slate-700
-
-              dark:text-white
-              dark:group-hover:text-slate-200
-            "
-          >
-            {job.title}
-          </h3>
-        </Link>
-
-        <p
-          className="
-            mt-1.5
-            flex items-center gap-1.5
+            max-w-[65%]
+            truncate
             text-sm
-            text-slate-500
-            dark:text-slate-400
+            font-semibold
+            text-slate-800
+            dark:text-slate-200
           "
         >
+          {companyName}
+        </span>
+
+        <span className="text-slate-300 dark:text-slate-600">
+          ·
+        </span>
+
+        <span
+          className="
+            flex
+            shrink-0
+            items-center
+            gap-1
+            text-xs
+            text-slate-400
+          "
+        >
+          <Clock3 size={12} />
+          {postedTime}
+        </span>
+      </div>
+
+      {/* =================================================
+          JOB TITLE
+      ================================================= */}
+
+      <Link
+        to={`/jobs/${job?._id}`}
+        className="
+          mt-2
+          block
+          rounded-md
+          focus:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-blue-500
+          focus-visible:ring-offset-2
+          dark:focus-visible:ring-offset-[#0f1117]
+        "
+      >
+        <h3
+          className="
+            line-clamp-2
+            min-h-[3.25rem]
+            text-[1.35rem]
+            font-semibold
+            leading-[1.25]
+            tracking-[-0.025em]
+            text-slate-950
+            transition-colors
+            duration-200
+            group-hover:text-slate-700
+
+            dark:text-white
+            dark:group-hover:text-slate-200
+          "
+        >
+          {job?.title || "Job Opportunity"}
+        </h3>
+      </Link>
+
+      {/* =================================================
+          TAGS
+      ================================================= */}
+
+      <div className="mt-4 flex min-h-[30px] flex-wrap gap-2">
+        {/* EMPLOYMENT TYPE */}
+
+        {job?.employmentType && (
           <span
             className="
-              font-medium
+              inline-flex
+              items-center
+              rounded-lg
+              bg-slate-100
+              px-2.5
+              py-1.5
+              text-[11px]
+              font-semibold
               text-slate-700
+
+              dark:bg-white/[0.07]
               dark:text-slate-300
             "
           >
-            {companyName}
+            {job.employmentType}
           </span>
+        )}
 
-          <span className="text-slate-300 dark:text-slate-600">
-            ·
-          </span>
+        {/* REMOTE */}
 
-          <span>
-            {job.location || "Remote"}
+        {isRemote && (
+          <span
+            className="
+              inline-flex
+              items-center
+              rounded-lg
+              bg-blue-50
+              px-2.5
+              py-1.5
+              text-[11px]
+              font-semibold
+              text-blue-700
+
+              dark:bg-blue-500/10
+              dark:text-blue-400
+            "
+          >
+            Remote
           </span>
-        </p>
+        )}
+
+        {/* CATEGORY */}
+
+        {!isRemote && category && (
+          <span
+            className="
+              inline-flex
+              max-w-[140px]
+              items-center
+              truncate
+              rounded-lg
+              bg-slate-100
+              px-2.5
+              py-1.5
+              text-[11px]
+              font-semibold
+              text-slate-700
+
+              dark:bg-white/[0.07]
+              dark:text-slate-300
+            "
+          >
+            {category}
+          </span>
+        )}
+
+        {/* EXPERIENCE */}
+
+        {experience && (
+          <span
+            className="
+              inline-flex
+              max-w-[130px]
+              items-center
+              truncate
+              rounded-lg
+              bg-slate-100
+              px-2.5
+              py-1.5
+              text-[11px]
+              font-semibold
+              text-slate-700
+
+              dark:bg-white/[0.07]
+              dark:text-slate-300
+            "
+          >
+            {experience}
+          </span>
+        )}
       </div>
 
-      {/* =====================================================
-          TRUST BADGE
-      ===================================================== */}
+      {/* =================================================
+          TRUST
+      ================================================= */}
 
-      <div className="relative mt-4">
+      <div className="mt-3 min-h-[20px]">
         {uploadedByRole === "admin" ? (
           <span
             className="
               inline-flex
               items-center
-              gap-1.5
-              rounded-full
-              border
-              border-blue-200
-              bg-blue-50
-              px-2.5
-              py-1
-              text-[11px]
+              gap-1
+              text-[10px]
               font-semibold
-              uppercase
-              tracking-wide
-              text-blue-700
-
-              dark:border-blue-500/20
-              dark:bg-blue-500/10
+              text-blue-600
               dark:text-blue-400
             "
           >
-            <BadgeCheck
-              size={13}
-              strokeWidth={2.5}
+            <ShieldCheck
+              size={12}
+              strokeWidth={2.3}
             />
-
-            Verified & Secure
+            Verified listing
           </span>
         ) : (
           <span
             className="
               inline-flex
               items-center
-              gap-1.5
-              rounded-full
-              border
-              border-emerald-200
-              bg-emerald-50
-              px-2.5
-              py-1
-              text-[11px]
+              gap-1
+              text-[10px]
               font-semibold
-              uppercase
-              tracking-wide
-              text-emerald-700
-
-              dark:border-emerald-500/20
-              dark:bg-emerald-500/10
+              text-emerald-600
               dark:text-emerald-400
             "
           >
             <ShieldCheck
-              size={13}
-              strokeWidth={2.5}
+              size={12}
+              strokeWidth={2.3}
             />
-
-            Trusted Listing
+            Trusted listing
           </span>
         )}
       </div>
 
-      {/* =====================================================
-          META
-      ===================================================== */}
+      {/* =================================================
+          SPACER
+      ================================================= */}
 
-      <div
-        className="
-          relative mt-4
-          flex flex-wrap
-          items-center
-          gap-x-4
-          gap-y-1.5
-          text-[13px]
-          text-slate-500
-          dark:text-slate-400
-        "
-      >
-        <span className="flex items-center gap-1.5">
-          <BriefcaseBusiness
-            size={14}
-            strokeWidth={1.75}
-          />
+      <div className="flex-1" />
 
-          {job.employmentType || "Full-time"}
-        </span>
-
-        <span className="h-3 w-px bg-slate-200 dark:bg-white/10" />
-
-        <span className="flex items-center gap-1.5">
-          <MapPin
-            size={14}
-            strokeWidth={1.75}
-          />
-
-          {job.location || "Remote"}
-        </span>
-      </div>
-
-      {/* =====================================================
-          DESCRIPTION
-      ===================================================== */}
-
-      <p
-        className="
-          relative mt-5
-          line-clamp-2
-          text-[13.5px]
-          leading-6
-          text-slate-500
-          dark:text-slate-400
-        "
-      >
-        {job.description ||
-          "Explore this opportunity and take the next step in your professional journey."}
-      </p>
-
-      <Link
-        to={`/jobs/${job._id}`}
-        className="
-          relative mt-2
-          inline-flex
-          w-fit
-          items-center
-          gap-1
-          text-[12.5px]
-          font-semibold
-          text-slate-500
-          transition-colors
-          hover:text-slate-900
-          dark:text-slate-400
-          dark:hover:text-white
-        "
-      >
-        View full details
-
-        <ArrowUpRight
-          size={12}
-          strokeWidth={2.25}
-        />
-      </Link>
-
-      {/* =====================================================
+      {/* =================================================
           DIVIDER
-      ===================================================== */}
+      ================================================= */}
 
       <div
         className="
-          relative mt-6
+          mt-5
           border-t
           border-slate-100
           dark:border-white/[0.08]
         "
       />
 
-      {/* =====================================================
+      {/* =================================================
           BOTTOM
-      ===================================================== */}
+      ================================================= */}
 
-      <div className="relative pt-5">
-        {/* SALARY */}
+      <div className="mt-4 flex items-end justify-between gap-3">
+        {/* SALARY + LOCATION */}
 
-        <div className="mb-5 flex items-end justify-between">
-          <div>
-            <p
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span
               className="
-                text-[11px]
-                font-medium
-                uppercase
-                tracking-wide
-                text-slate-400
-              "
-            >
-              Annual salary
-            </p>
-
-            <p
-              className="
-                mt-1
-                font-serif
-                text-[1.4rem]
-                font-medium
+                text-[15px]
+                font-bold
                 tracking-tight
-                text-slate-900
+                text-slate-950
                 dark:text-white
               "
             >
-              ₹{job.salaryRange?.min || "Negotiable"}
+              {hasSalary
+                ? `₹${formatSalary(salaryMin)}`
+                : "Negotiable"}
+            </span>
 
-              {job.salaryRange?.max && (
-                <span
-                  className="
-                    font-sans
-                    text-base
-                    font-normal
-                    text-slate-400
-                  "
-                >
-                  {" "}
-                  – ₹{job.salaryRange.max}
-                </span>
-              )}
-            </p>
+            {hasSalaryMax && (
+              <span
+                className="
+                  text-[13px]
+                  font-medium
+                  text-slate-400
+                "
+              >
+                – ₹{formatSalary(salaryMax)}
+              </span>
+            )}
           </div>
 
           <div
             className="
-              flex items-center gap-1
-              text-[12px]
+              mt-1.5
+              flex
+              max-w-[170px]
+              items-center
+              gap-1.5
+              truncate
+              text-[11px]
               text-slate-400
             "
+            title={location}
           >
-            <Clock3
-              size={13}
-              strokeWidth={1.75}
+            <MapPin
+              size={12}
+              strokeWidth={1.9}
+              className="shrink-0"
             />
 
-            <div className="flex items-center gap-1 text-xs text-slate-400">
-              {getPostedTime(job.createdAt)}
-            </div>
+            <span className="truncate">
+              {location}
+            </span>
           </div>
         </div>
 
-        {/* =====================================================
-            APPLY BUTTON
-        ===================================================== */}
+        {/* APPLY */}
 
-        {renderApplyButton()}
+        <div className="shrink-0">
+          {renderApplyButton()}
+        </div>
       </div>
     </article>
   );
