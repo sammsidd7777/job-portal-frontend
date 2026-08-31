@@ -1,99 +1,131 @@
 import { useEffect, useState } from "react";
 
-const Loader = ({ message = "Matching you with the right roles…" }) => {
+const Loader = ({ message = "Loading Job Hunter…" }) => {
   const [percent, setPercent] = useState(0);
 
   useEffect(() => {
-    // Eases toward ~96% and holds there — never lies about being done.
     const interval = setInterval(() => {
       setPercent((p) => {
-        if (p >= 96) return p;
-        const step = p < 60 ? 3 : p < 85 ? 1.2 : 0.4;
-        return Math.min(96, p + step);
+        if (p >= 95) return p;
+
+        const step = p < 50 ? 4 : p < 80 ? 2 : 0.5;
+        return Math.min(95, p + step);
       });
-    }, 90);
+    }, 100);
+
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#12131C] overflow-hidden">
-      {/* faint vignette + grain for depth, no gradients on shapes */}
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#12131C] overflow-hidden">
+      
+      {/* Subtle background glow */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        className="pointer-events-none absolute inset-0 opacity-30"
         style={{
           background:
-            "radial-gradient(circle at 50% 42%, rgba(212,162,78,0.10), transparent 60%)",
+            "radial-gradient(circle at 50% 45%, rgba(212,162,78,0.12), transparent 55%)",
         }}
       />
 
-      {/* Target-lock mark */}
-      <div className="relative flex h-28 w-28 items-center justify-center">
-        <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full animate-[spin_7s_linear_infinite]">
-          <circle
-            cx="60" cy="60" r="54"
-            fill="none" stroke="#3A3B46" strokeWidth="1"
-            strokeDasharray="4 10" strokeLinecap="round"
-          />
-        </svg>
+      <div className="relative flex w-[280px] flex-col items-center">
 
-        <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full">
-          <circle cx="60" cy="60" r="40" fill="none" stroke="#2A2B34" strokeWidth="1" />
-        </svg>
+        {/* Hosting-style loader */}
+        <div className="relative flex h-20 w-20 items-center justify-center">
 
-        <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full">
-          <circle
-            cx="60" cy="60" r="40"
-            fill="none" stroke="#D4A24E" strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeDasharray="251.2"
-            strokeDashoffset={251.2 - (251.2 * percent) / 100}
-            transform="rotate(-90 60 60)"
-            style={{ transition: "stroke-dashoffset 0.2s linear" }}
-          />
-        </svg>
+          {/* Outer spinning ring */}
+          <div className="absolute inset-0 rounded-full border border-[#2A2B34]" />
 
-        {/* crosshair ticks */}
-        {[0, 90, 180, 270].map((deg) => (
           <div
-            key={deg}
-            className="absolute h-2 w-px bg-[#4A4B57]"
-            style={{ transform: `rotate(${deg}deg) translateY(-52px)` }}
+            className="absolute inset-0 rounded-full border border-transparent border-t-[#D4A24E] animate-spin"
+            style={{ animationDuration: "1.4s" }}
           />
-        ))}
 
-        <div className="relative flex h-3 w-3 items-center justify-center">
-          <span className="absolute h-3 w-3 rounded-full bg-[#D4A24E] animate-ping opacity-40" />
-          <span className="relative h-2 w-2 rounded-full bg-[#D4A24E]" />
+          {/* Inner ring */}
+          <div className="absolute h-12 w-12 rounded-full border border-[#30313B]" />
+
+          <div
+            className="absolute h-12 w-12 rounded-full border border-transparent border-b-[#D4A24E] animate-spin"
+            style={{
+              animationDuration: "2s",
+              animationDirection: "reverse",
+            }}
+          />
+
+          {/* Center dot */}
+          <div className="relative h-2.5 w-2.5 rounded-full bg-[#D4A24E]">
+            <span className="absolute inset-0 rounded-full bg-[#D4A24E] animate-ping opacity-40" />
+          </div>
         </div>
-      </div>
 
-      {/* Wordmark + message */}
-      <div className="mt-9 text-center">
+        {/* Brand */}
         <h2
-          className="text-[22px] tracking-[0.04em] text-[#F4F1EA]"
-          style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500 }}
+          className="mt-7 text-[21px] tracking-[0.06em] text-[#F4F1EA]"
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontWeight: 500,
+          }}
         >
-          JOB HUNT
+          JOB HUNTER
         </h2>
-        <p className="mt-3 text-sm font-light text-[#9C9A93]" style={{ fontFamily: "'Inter', sans-serif" }}>
+
+        {/* Loading message */}
+        <p
+          className="mt-2 text-xs text-[#8F8D87]"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
           {message}
         </p>
-      </div>
 
-      {/* progress line + percent */}
-      <div className="mt-8 flex w-52 flex-col items-center gap-2">
-        <div className="h-px w-full bg-[#2A2B34]">
-          <div
-            className="h-px bg-[#D4A24E]"
-            style={{ width: `${percent}%`, transition: "width 0.2s linear" }}
-          />
+        {/* Progress */}
+        <div className="mt-7 w-full">
+
+          <div className="flex items-center justify-between mb-2">
+            <span
+              className="text-[10px] uppercase tracking-[0.14em] text-[#5F5E5A]"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+              }}
+            >
+              Loading
+            </span>
+
+            <span
+              className="text-[10px] tracking-[0.08em] text-[#8F8D87]"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+              }}
+            >
+              {Math.round(percent)}%
+            </span>
+          </div>
+
+          <div className="h-[2px] w-full overflow-hidden bg-[#292A33] rounded-full">
+            <div
+              className="h-full rounded-full bg-[#D4A24E]"
+              style={{
+                width: `${percent}%`,
+                transition: "width 0.2s linear",
+              }}
+            />
+          </div>
         </div>
-        <span
-          className="text-[11px] tracking-[0.12em] text-[#6E6D68]"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-        >
-          {Math.round(percent)}%
-        </span>
+
+        {/* Small hosting-style status */}
+        <div className="mt-4 flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#D4A24E] animate-pulse" />
+
+          <span
+            className="text-[10px] text-[#66645F]"
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+            }}
+          >
+            Initializing…
+          </span>
+        </div>
       </div>
     </div>
   );
